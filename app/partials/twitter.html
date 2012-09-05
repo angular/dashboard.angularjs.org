@@ -1,0 +1,32 @@
+<div id="twitter-carousel" class="carousel slide" ng-controller="TwitterCtrl"
+     xmlns="http://www.w3.org/1999/html" style="margin-left: 65px" >
+  <div class="carousel-inner">
+    <div ng-hide="tweets.length > 0">
+      <p class="lead">There are no tweets about AngularJS</p>
+    </div>
+
+    <div class="item tw-align-center twitter-tweet-rendered" lang="en" style="" ng-repeat="tweet in tweets" ng-show="tweets.length > 0">
+      <div class="twt-border">
+        <img src="img/twitter-bird-light-bgs.png" class="twitter-logo">
+        <blockquote class="twt-o twt-tweet hentry twt-always-show-actions twt-pinned twt-standard">
+          <div class="vcard author">
+            <a class="screen-name url" ng-href="https://twitter.com/{{tweet.from_user}}">
+              <span class="avatar"><img ng-src="{{tweet.profile_image_url}}" class="photo" alt=""></span>
+              <span class="fn">{{tweet.from_user_name}}</span>
+              <span class="nickname">@<b>{{tweet.from_user}}</b></span>
+            </a>
+          </div>
+
+          <div class="entry-content">
+            <p class="entry-title">{{tweet.text}}</p>
+          </div>
+          <div class="footer">
+            <span class="value-title"></span>
+            {{tweet.created_at | date:shortDate}}
+            </span>
+          </div>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+</div>

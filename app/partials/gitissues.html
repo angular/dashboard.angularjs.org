@@ -1,0 +1,12 @@
+<table class="table table-condensed table-striped">
+  <caption>
+    Pending Issues<span class="badge badge-warning">{{numIssues}}</span>
+  </caption>
+
+  <tbody>
+    <tr ng-repeat="issue in issues | limitTo:5">
+      <td>{{issue.number}}</td>
+      <td>{{issue.title}}<br><i><small>{{issue.user.login}} @ {{issue.created_at | date:shortDate}}</small></i></td>
+    </tr>
+  </tbody>
+</table>

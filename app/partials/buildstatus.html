@@ -1,0 +1,10 @@
+
+<div ng-controller="BuildStatusCtrl" class="row">
+  <div class="span6 buildStatus widgetContainer" ng-class="masterBuild.color">
+    <h2 align="center">Angular Master</h2><img class="img-rounded" src="img/in-progress.gif" ng-show="{red_anime: 'true'}[masterBuild.status]">
+  </div>
+  <div class="span6 buildStatus widgetContainer" ng-class="v1Build.color">
+    <h2 align="center">Angular V1.0.X</h2><img class="img-rounded" src="img/in-progress.gif" ng-show="{red_anime: 'true'}[v1Build.status]">
+  </div>
+</div>
+

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" ng-app="ngDashboard">
+<head>
+  <meta charset="utf-8">
+  <title>My AngularJS App</title>
+  <link rel="stylesheet" href="css/app.css"/>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/tweet.css" rel="stylesheet">
+</head>
+<body style="background-color: #000000;">
+  <div class="row-fluid">
+    <div class="span12">
+      <div class="row">
+        <div class="span5 offset1">
+          <div ng-include="'partials/buildstatus.html'"></div>
+          <div class="well widgetContainer" ng-include="'partials/buildqueue.html'"></div>
+          <div class="well widgetContainer" ng-include="'partials/twitter.html'"></div>
+          <div class="well widgetContainer" ng-include="'partials/gplus.html'"></div>
+
+        </div>
+        <div class="span5" style="margin-top: 10px">
+          <div class="well" ng-include="'partials/mailinglist.html'" ng-controller="MailingListCtrl"></div>
+          <div class="well" ng-include="'partials/github.html'"></div>
+          <!--div class="well" ng-include="'partials/gitprs.html'" ng-controller="PullRequestsCtrl"></div>
+          <div class="well" ng-include="'partials/gitissues.html'" ng-controller="IssuesCtrl"></div-->
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="lib/jquery.js"></script>
+  <script src="lib/angular/angular.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/services.js"></script>
+  <script src="lib/angular/angular-resource.js"></script>
+  <script src="js/controllers.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="lib/bootstrap.js"></script>
+</body>
+</html>
