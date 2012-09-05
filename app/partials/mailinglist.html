@@ -1,0 +1,13 @@
+<table class="table table-condensed table-striped groupsTable">
+  <caption>
+    Latest Topics on Groups
+  </caption>
+  <tbody>
+  <tr ng-repeat="topic in topics | limitTo:5">
+    <td>
+      {{topic.title}}<br/>
+      <i><small>{{topic.author}} on {{topic.timestamp | date:shortDate}}</small></i>
+    </td>
+  </tr>
+  </tbody>
+</table>
