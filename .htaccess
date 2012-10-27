@@ -1,0 +1,20 @@
+RewriteEngine on
+
+# Rewrite all requests except gitFetchSite.php into /app
+RewriteCond %{REQUEST_URI} !^/app
+RewriteCond %{REQUEST_URI} !^/gitFetchSite.php
+RewriteRule (.*) app/$1
+
+# cache everything else for 1h
+ExpiresDefault "access plus 60 minutes"
+
+
+# compression
+SetOutputFilter DEFLATE
+Header set Vary "Accept-Encoding"
+
+
+# content types
+AddType application/javascript js
+AddType text/cache-manifest .manifest
+
