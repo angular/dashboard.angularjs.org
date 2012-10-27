@@ -98,10 +98,18 @@ angular.module('ngDashboard.services', ['ngResource']).
               isArray: false
             }
           });
-    }).factory('CarouselStarter', function() {
-      return function(elementId, optIntervalInMs) {
-        optIntervalInMs = optIntervalInMs || 7000;
-        $(elementId).carousel({interval: optIntervalInMs});
+    }).factory('CarouselController', function() {
+      return function(elementId) {
+        return {
+          init: function(optIntervalInMs) {
+            optIntervalInMs = optIntervalInMs || 7000;
+            $(elementId).carousel({interval: optIntervalInMs});
+          },
+          perform: function(state) {
+            $(elementId).carousel(state);
+          }
+        };
+
       };
     }).factory('Poll', function($timeout) {
       return function(pollFn, interval) {
