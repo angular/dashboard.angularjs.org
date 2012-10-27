@@ -14,12 +14,13 @@ describe('Controllers', function() {
   beforeEach(module('ngDashboard.services'));
 
   describe('TwitterCtrl', function(){
-    var $httpBackend, scope, twitterCtrl, resultTweetData, carouselStarterCalled, timeout;
+    var $httpBackend, scope, twitterCtrl, resultTweetData, carouselLog, timeout;
 
     beforeEach(inject(function(_$httpBackend_, $rootScope, $timeout, $controller) {
       timeout = $timeout;
       $httpBackend = _$httpBackend_;
       scope = $rootScope.$new();
+      carouselLog = '';
       resultTweetData = function() {
         return {
           completed_in: 0.031,
@@ -41,8 +42,15 @@ describe('Controllers', function() {
           respond(resultTweetData());
       twitterCtrl = $controller(TwitterCtrl, {
         $scope: scope,
-        CarouselStarter: function(id) {
-          carouselStarterCalled = id;
+        CarouselController: function(id) {
+          return {
+            init: function() {
+              carouselLog += 'init;';
+            },
+            perform: function(event) {
+              carouselLog += 'event:' + event + ';';
+            }
+          };
         }
       });
     }));
@@ -50,8 +58,9 @@ describe('Controllers', function() {
 
     it('should fetch tweets and store results', function() {
       expect(scope.tweets).not.toBeDefined();
+      expect(carouselLog).toEqual('init;');
       $httpBackend.flush();
-      expect(carouselStarterCalled).toEqual('#twitter-carousel');
+      expect(carouselLog).toEqual('init;event:pause;event:undefined;');
       expect(scope.tweets).toEqualData(resultTweetData().results);
     });
 
@@ -70,12 +79,13 @@ describe('Controllers', function() {
   });
 
   describe('GPlusCtrl', function(){
-    var gPlusCtrl, $httpBackend, scope, resultGPlusData, carouselStarterCalled, timeout;
+    var gPlusCtrl, $httpBackend, scope, resultGPlusData, carouselLog, timeout;
 
     beforeEach(inject(function(_$httpBackend_, $rootScope, $timeout, $controller) {
       timeout = $timeout;
       $httpBackend = _$httpBackend_;
       scope = $rootScope.$new();
+      carouselLog = '';
       resultGPlusData = function() {
         return {
           updated: '2012-09-02T12:34:12.242Z',
@@ -102,8 +112,15 @@ describe('Controllers', function() {
 
       gPlusCtrl = $controller(GPlusCtrl, {
         $scope: scope,
-        CarouselStarter: function(id) {
-          carouselStarterCalled = id;
+        CarouselController: function(id) {
+          return {
+            init: function() {
+              carouselLog += 'init;';
+            },
+            perform: function(event) {
+              carouselLog += 'event:' + event + ';';
+            }
+          };
         }
       });
     }));
@@ -111,8 +128,11 @@ describe('Controllers', function() {
 
     it('should fetch and store gplus results for display', function() {
       expect(scope.posts).not.toBeDefined();
+      expect(carouselLog).toEqual('init;');
+
       $httpBackend.flush();
-      expect(carouselStarterCalled).toEqual('#gplus-carousel');
+
+      expect(carouselLog).toEqual('init;event:pause;event:undefined;');
       expect(scope.posts).toEqualData(resultGPlusData().items);
     });
 

@@ -2,31 +2,37 @@
 
 /* Controllers */
 
-function TwitterCtrl($scope, Twitter, CarouselStarter, Poll) {
+function TwitterCtrl($scope, Twitter, CarouselController, Poll) {
+  var tweetCarousel = CarouselController('#twitter-carousel');
   var fetchTweets = function() {
     Twitter.search({}, function(result) {
       if (result && result.results) {
+        tweetCarousel.perform('pause');
         $scope.tweets = result.results;
+        tweetCarousel.perform();
       }
     });
   };
   Poll(fetchTweets, 15 * 60 * 1000)
-  CarouselStarter('#twitter-carousel');
+  tweetCarousel.init();
 }
-TwitterCtrl.$inject = ['$scope', 'Twitter', 'CarouselStarter', 'Poll'];
+TwitterCtrl.$inject = ['$scope', 'Twitter', 'CarouselController', 'Poll'];
 
-function GPlusCtrl($scope, GPlus, CarouselStarter, Poll) {
+function GPlusCtrl($scope, GPlus, CarouselController, Poll) {
+  var gPlusCarousel = CarouselController('#gplus-carousel');
   var fetchPosts = function() {
     GPlus.search({}, function(result) {
       if (result && result.items) {
+        gPlusCarousel.perform('pause')
         $scope.posts = result.items;
+        gPlusCarousel.perform();
       }
     });
   };
   Poll(fetchPosts, 15 * 60 * 1000);
-  CarouselStarter('#gplus-carousel');
+  gPlusCarousel.init();
 }
-GPlusCtrl.$inject = ['$scope', 'GPlus', 'CarouselStarter', 'Poll'];
+GPlusCtrl.$inject = ['$scope', 'GPlus', 'CarouselController', 'Poll'];
 
 function BuildStatusCtrl($scope, CIBuildStatus, Poll) {
   var fetchStatus = function() {
@@ -89,7 +95,7 @@ function MailingListCtrl($scope, MailingList, Poll) {
 }
 MailingListCtrl.$inject = ['$scope', 'MailingList', 'Poll'];
 
-function GitCtrl(CarouselStarter) {
-  CarouselStarter('#git-carousel', 20000);
+function GitCtrl(CarouselController) {
+  CarouselController('#git-carousel').init(20000);
 }
-GitCtrl.$inject = ['CarouselStarter'];
+GitCtrl.$inject = ['CarouselController'];
