@@ -70,6 +70,15 @@ angular.module('ngDashboard.services', ['ngResource']).
             }
           });
     }).
+    factory('GitCommits', function($resource) {
+      return $resource('https://api.github.com/repos/angular/angular.js/commits',
+          {callback: 'JSON_CALLBACK'}, {
+            fetch: {
+              method:'JSONP',
+              isArray: false
+            }
+          });
+    }).
     factory('CIBuildStatus', function($resource) {
       return $resource('http://ci.angularjs.org/job/:buildname/api/json',
           {jsonp: 'JSON_CALLBACK'}, {

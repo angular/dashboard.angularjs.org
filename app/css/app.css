@@ -48,7 +48,6 @@
 .widgetContainer {
   padding: 10px;
   margin-top: 10px;
-  margin-left: -20px;
   border-radius: 5px;
 }
 
@@ -98,4 +97,12 @@ table.groupsTable th {
   font-weight: bold;
   font-size: 18px;
   padding-bottom: 10px;
+}
+
+.row {
+    margin: 0;
+}
+
+body {
+    margin: 0 20px;
 }
