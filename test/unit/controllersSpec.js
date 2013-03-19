@@ -194,6 +194,100 @@ describe('Controllers', function() {
     });
   });
 
+  describe('numSHAsBehind', function() {
+    var EMPTY_DATA = { data: [] };
+    it('should return 0 for with no SHAs', function() {
+      var behindData = EMPTY_DATA;
+      var headData = EMPTY_DATA;
+      expect(numSHAsBehind(behindData, headData)).toEqual(0);
+    });
+
+    it('should return the number of SHAs in head if "behind" is empty',
+        function() {
+      var behindData = EMPTY_DATA;
+      var headData = { data: [ {sha: "a"}]};
+      expect(numSHAsBehind(behindData, headData)).toEqual(1);
+    });
+
+    it('should return the number of SHAs between head and behind', function() {
+      var behindData = { data: [
+        {sha: 'a'}
+      ]};
+      var headData = { data: [
+        {sha: 'd'},
+        {sha: 'c'},
+        {sha: 'b'},
+        {sha: 'a'}
+      ]};
+      expect(numSHAsBehind(behindData, headData)).toEqual(3);
+    });
+
+    it('should return 0 for up-to-date "behind"', function () {
+      var data = { data: [{sha: 'a'}, {sha:'b'}]};
+      expect(numSHAsBehind(data, data)).toEqual(0);
+    });
+
+    it('should return a large number when head does not contain behind', function(){
+      var behindData = { data: [{sha: 'a'}, {sha:'b'}]};
+      var headData = { data: [{sha: 'c'}, {sha:'d'}]};
+      expect(numSHAsBehind(behindData, headData)).toEqual(2);
+    })
+  });
+
+  describe('G3V1XCtrl', function() {
+    var $httpBackend, scope, g3v1xCtrl, resultMasterData, resultMasterDataNext, resultG3V1XData, timeout;
+
+    var MASTER_URL = 'https://api.github.com/repos/angular/angular.js/commits?callback=JSON_CALLBACK&sha=master';
+    var G3_URL = 'https://api.github.com/repos/angular/angular.js/commits?callback=JSON_CALLBACK&sha=g3_v1x';
+
+    beforeEach(inject(function(_$httpBackend_, $rootScope, $timeout, $controller) {
+      timeout = $timeout;
+      $httpBackend = _$httpBackend_;
+      scope = $rootScope.$new();
+      resultMasterData = function() {
+        return { 'data': [
+          {'sha': 'masterA'},
+          {'sha': 'masterB'},
+          {'sha': 'bothA'},
+          {'sha': 'bothB'}
+        ]};
+      };
+      resultMasterDataNext = function() {
+        return { 'data': [
+          {'sha': 'masterFartherAhead'},
+          {'sha': 'masterA'},
+          {'sha': 'masterB'},
+          {'sha': 'bothA'},
+          {'sha': 'bothB'}
+        ]};
+      };
+      resultG3V1XData = function() {
+        return { 'data': [
+          {'sha': 'bothA'},
+          {'sha': 'bothB'}
+        ]};
+      };
+      $httpBackend.expectJSONP(G3_URL).respond(resultG3V1XData());
+      $httpBackend.expectJSONP(MASTER_URL).respond(resultMasterData());
+      g3v1xCtrl = $controller(G3V1XCtrl, {$scope: scope});
+    }));
+
+    it('should fetch number of SHAs behind on load', function() {
+      expect(scope.g3v1x.numSHAsBehind).not.toBeDefined();
+      $httpBackend.flush();
+      expect(scope.g3v1x.numSHAsBehind).toEqual(2);
+    });
+
+    it('should fetch number of SHAs on poll', function() {
+      $httpBackend.flush();
+      $httpBackend.expectJSONP(G3_URL).respond(resultG3V1XData());
+      $httpBackend.expectJSONP(MASTER_URL).respond(resultMasterDataNext());
+      timeout.flush();
+      $httpBackend.flush();
+      expect(scope.g3v1x.numSHAsBehind).toEqual(3);
+    });
+  });
+
   describe('IssuesCtrl()', function(){
     var issuesCtrl, $httpBackend, scope, issuesData, summaryData, timeout;
 

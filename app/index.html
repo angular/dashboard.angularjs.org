@@ -3,17 +3,19 @@
 <head>
   <meta charset="utf-8">
   <title>AngularJS Dashboard</title>
-  <link rel="stylesheet" href="css/app.css"/>
   <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css"/>
   <link href="css/tweet.css" rel="stylesheet">
 </head>
 <body style="background-color: #000000;">
   <div class="row-fluid">
     <div class="span12">
       <div class="row">
-        <div class="span5 offset1">
+        <div class="span6">
           <div ng-include="'partials/buildstatus.html'"></div>
-          <div class="well widgetContainer" ng-include="'partials/buildqueue.html'"></div>
+          <div class="row">
+            <div class="well widgetContainer" ng-include="'partials/buildqueue.html'"></div>
+          </div>
           <div class="well widgetContainer" ng-include="'partials/twitter.html'"></div>
           <div class="well widgetContainer" ng-include="'partials/gplus.html'"></div>
 
@@ -25,6 +27,8 @@
           <div class="well" ng-include="'partials/gitissues.html'" ng-controller="IssuesCtrl"></div-->
 
         </div>
+        <div class="span1 well well-small widgetContainer" ng-include="'partials/g3v1x.html'"></div>
+
       </div>
     </div>
   </div>
