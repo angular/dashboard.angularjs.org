@@ -25,9 +25,10 @@
           <div class="well" ng-include="'partials/github.html'"></div>
           <!--div class="well" ng-include="'partials/gitprs.html'" ng-controller="PullRequestsCtrl"></div>
           <div class="well" ng-include="'partials/gitissues.html'" ng-controller="IssuesCtrl"></div-->
-
         </div>
-        <div class="span1 well well-small widgetContainer" ng-include="'partials/g3v1x.html'"></div>
+
+        <google3-sync branch="g3_v1_x"></google3-sync>
+        <google3-sync branch="g3_v1_0"></google3-sync>
 
       </div>
     </div>
@@ -39,6 +40,7 @@
   <script src="js/services.js"></script>
   <script src="lib/angular/angular-resource.js"></script>
   <script src="js/controllers.js"></script>
+  <script src="js/directives.js"></script>
   <script src="js/filters.js"></script>
   <script src="lib/bootstrap.js"></script>
 </body>
