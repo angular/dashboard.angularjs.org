@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.0.1
+ * @license AngularJS v1.2.0rc1
  * (c) 2010-2012 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -36,8 +36,8 @@ function setupModuleLoader(window) {
      *
      * # Module
      *
-     * A module is a collocation of services, directives, filters, and configure information. Module
-     * is used to configure the {@link AUTO.$injector $injector}.
+     * A module is a collection of services, directives, filters, and configuration information.
+     * `angular.module` is used to configure the {@link AUTO.$injector $injector}.
      *
      * <pre>
      * // Create a new module
@@ -47,8 +47,7 @@ function setupModuleLoader(window) {
      * myModule.value('appName', 'MyCoolApp');
      *
      * // configure existing services inside initialization blocks.
-     * myModule.config(function($locationProvider) {
-'use strict';
+     * myModule.config(function($locationProvider) {'use strict';
      *   // Configure existing providers
      *   $locationProvider.hashPrefix('!');
      * });
@@ -67,7 +66,7 @@ function setupModuleLoader(window) {
      * @param {!string} name The name of the module to create or retrieve.
      * @param {Array.<string>=} requires If specified then new module is being created. If unspecified then the
      *        the module is being retrieved for further configuration.
-     * @param {Function} configFn Option configuration function for the module. Same as
+     * @param {Function} configFn Optional configuration function for the module. Same as
      *        {@link angular.Module#config Module#config()}.
      * @returns {module} new module with the {@link angular.Module} api.
      */
@@ -77,7 +76,9 @@ function setupModuleLoader(window) {
       }
       return ensure(modules, name, function() {
         if (!requires) {
-          throw Error('No module: ' + name);
+          throw minErr('$injector')('nomod', "Module '{0}' is not available! You either misspelled the module name " +
+              "or forgot to load it. If registering a module ensure that you specify the dependencies as the second " +
+              "argument.", name);
         }
 
         /** @type {!Array.<Array.<*>>} */
@@ -172,6 +173,39 @@ function setupModuleLoader(window) {
 
           /**
            * @ngdoc method
+           * @name angular.Module#animation
+           * @methodOf angular.Module
+           * @param {string} name animation name
+           * @param {Function} animationFactory Factory function for creating new instance of an animation.
+           * @description
+           *
+           * **NOTE**: animations are take effect only if the **ngAnimate** module is loaded.
+           *
+           *
+           * Defines an animation hook that can be later used with {@link ngAnimate.$animate $animate} service and
+           * directives that use this service.
+           *
+           * <pre>
+           * module.animation('.animation-name', function($inject1, $inject2) {
+           *   return {
+           *     eventName : function(element, done) {
+           *       //code to run the animation
+           *       //once complete, then run done()
+           *       return function cancellationFunction(element) {
+           *         //code to cancel the animation
+           *       }
+           *     }
+           *   }
+           * })
+           * </pre>
+           *
+           * See {@link ngAnimate.$animateProvider#register $animateProvider.register()} and
+           * {@link ngAnimate ngAnimate module} for more information.
+           */
+          animation: invokeLater('$animateProvider', 'register'),
+
+          /**
+           * @ngdoc method
            * @name angular.Module#filter
            * @methodOf angular.Module
            * @param {string} name Filter name.
@@ -200,7 +234,7 @@ function setupModuleLoader(window) {
            * @param {Function} directiveFactory Factory function for creating new instance of
            * directives.
            * @description
-           * See {@link ng.$compileProvider.directive $compileProvider.directive()}.
+           * See {@link ng.$compileProvider#directive $compileProvider.directive()}.
            */
           directive: invokeLater('$compileProvider', 'directive'),
 
@@ -222,8 +256,8 @@ function setupModuleLoader(window) {
            * @param {Function} initializationFn Execute this function after injector creation.
            *    Useful for application initialization.
            * @description
-           * Use this method to register work which needs to be performed when the injector with
-           * with the current module is finished loading.
+           * Use this method to register work which should be performed when the injector is done
+           * loading all modules.
            */
           run: function(block) {
             runBlocks.push(block);
@@ -254,6 +288,7 @@ function setupModuleLoader(window) {
   });
 
 }
+
 )(window);
 
 /**

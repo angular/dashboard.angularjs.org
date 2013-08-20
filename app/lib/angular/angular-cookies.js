@@ -1,10 +1,9 @@
 /**
- * @license AngularJS v1.0.1
+ * @license AngularJS v1.2.0rc1
  * (c) 2010-2012 Google, Inc. http://angularjs.org
  * License: MIT
  */
-(function(window, angular, undefined) {
-'use strict';
+(function(window, angular, undefined) {'use strict';
 
 /**
  * @ngdoc overview
@@ -25,6 +24,18 @@ angular.module('ngCookies', ['ng']).
    * this object, new cookies are created/deleted at the end of current $eval.
    *
    * @example
+   <doc:example>
+     <doc:source>
+       <script>
+         function ExampleController($cookies) {
+           // Retrieving a cookie
+           var favoriteCookie = $cookies.myFavorite;
+           // Setting a cookie
+           $cookies.myFavorite = 'oatmeal';
+         }
+       </script>
+     </doc:source>
+   </doc:example>
    */
    factory('$cookies', ['$rootScope', '$browser', function ($rootScope, $browser) {
       var cookies = {},
@@ -133,7 +144,8 @@ angular.module('ngCookies', ['ng']).
          * @returns {Object} Deserialized cookie value.
          */
         get: function(key) {
-          return angular.fromJson($cookies[key]);
+          var value = $cookies[key];
+          return value ? angular.fromJson(value) : value;
         },
 
         /**
@@ -167,5 +179,6 @@ angular.module('ngCookies', ['ng']).
       };
 
     }]);
+
 
 })(window, window.angular);
