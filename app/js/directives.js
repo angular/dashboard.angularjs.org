@@ -21,7 +21,8 @@ angular.module('ngDashboard.directives', []).
     return {
       restrict: 'E',
       scope: {
-        branch: '@'
+        headBranch: '@',
+        g3Branch: '@'
       },
       templateUrl: 'partials/google3-sync.html',
       replace: true,
@@ -36,7 +37,7 @@ angular.module('ngDashboard.directives', []).
         var fetchData = function() {
           var masterData, g3BranchData;
 
-          GitCommits.fetch({sha: $scope.branch}, function(response) {
+          GitCommits.fetch({sha: $scope.g3Branch}, function(response) {
             if (masterData) {
               computeSHAsBehind($scope, response, masterData);
             } else {
@@ -44,7 +45,7 @@ angular.module('ngDashboard.directives', []).
             }
           });
 
-          GitCommits.fetch({sha: 'master'}, function(response) {
+          GitCommits.fetch({sha: $scope.headBranch}, function(response) {
             if (g3BranchData) {
               computeSHAsBehind($scope, g3BranchData, response);
             } else {
