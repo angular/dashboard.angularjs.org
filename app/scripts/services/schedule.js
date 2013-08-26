@@ -5,8 +5,8 @@ angular.module('dashboardApp').service('schedule', ['$timeout', function Schedul
   this.onceAMinute = function(task) {
     $timeout(function repeat() {
       task();
-      $timeout(repeat, 60);
-    }, 60);
+      $timeout(repeat, 60*1000);
+    }, 0);
   };
 
 }]);

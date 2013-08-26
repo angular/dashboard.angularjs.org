@@ -24,14 +24,17 @@ describe('Service: schedule', function () {
 
       expect(log).toEqual([]);
 
-      $timeout.flush(60);
+      $timeout.flush(0);
       expect(log).toEqual(['task1']);
 
-      $timeout.flush(59);
-      expect(log).toEqual(['task1']);
-
-      $timeout.flush(1);
+      $timeout.flush(60*1000);
       expect(log).toEqual(['task1', 'task1']);
+
+      $timeout.flush(59*1000);
+      expect(log).toEqual(['task1', 'task1']);
+
+      $timeout.flush(1*1000);
+      expect(log).toEqual(['task1', 'task1', 'task1']);
     });
   })
 
