@@ -1,0 +1,19 @@
+dash-flip {
+  display: block;
+  position: relative;
+}
+
+dash-flip .dash-flipable {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  transition: opacity .5s ease-in-out;
+  -moz-transition: opacity .5s ease-in-out;
+  -webkit-transition: opacity .5s ease-in-out;
+}
+
+dash-flip .dash-flip-active {
+  opacity: 1;
+}
