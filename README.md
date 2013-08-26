@@ -1,5 +1,0 @@
-
-dashboard
-=========
-
-AngularJS Dashboard
