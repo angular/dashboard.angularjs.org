@@ -32,14 +32,14 @@
 
   <div class="branch-status" ng-controller="BranchStatusController">
     <div class="branch" ng-repeat="branch in branches">
-      <h2 class="branch-title">{{branch.title}}</h2>
+      <h2 class="branch-title" bind-markdown="branch.title"></h2>
 
       <card ng-repeat="card in branch.cards" card-data="card"></card>
     </div>
   </div>
 
   <div class="github-status" ng-controller="GithubStatusController">
-    <div class="branch-title milestone-title">{{milestone.title}}</div>
+    <div class="branch-title milestone-title" bind-markdown="milestone.title"></div>
     <div dash-progress-bar done="20" total="100"></div>
 
     <card ng-repeat="card in milestone.cards" card-data="card"></card>
@@ -71,6 +71,7 @@
 
         <script src="scripts/directives/dashProgressBar.js"></script>
         <script src="scripts/directives/card.js"></script>
+        <script src="scripts/directives/bind-markdown.js"></script>
 
 
         <script src="scripts/controllers/DashboardController.js"></script>
