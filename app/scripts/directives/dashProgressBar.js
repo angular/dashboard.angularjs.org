@@ -8,14 +8,20 @@ angular.module('dashboardApp').directive("dashProgressBar", function() {
     restrict: "A",
     // TODO(chirayu): get ng-html2js preprocess to work.
     // templateUrl: "views/dashProgressBar.html",
-    template: '<div class="progress"><div class="bar" style="width: {{percentDone()}}%"></div></div>',
+    template: '<div class="progress"><div class="bar" ng-style="{width: percentDone()}"></div></div>',
     scope: {
       done: "@",
       total: "@"
     },
-    controller: function($scope) {
+    controller: function($scope, $exceptionHandler) {
       $scope.percentDone = function percentDone() {
-        return ($scope.done * 100 / $scope.total) || 0;
+        var percentage = ($scope.done * 100 / $scope.total);
+        if (!isNaN(percentage) && percentage >= 0 && percentage <= 100) {
+          return percentage + "%";
+        } else {
+          $exceptionHandler("dashProgressBar: unable to compute progress percentage. done/total ratio is not valid.");
+          return "0%";
+        }
       }
     }
   };
