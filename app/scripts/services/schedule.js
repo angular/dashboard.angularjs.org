@@ -3,7 +3,7 @@
 angular.module('dashboardApp').service('schedule', ['$timeout', function Schedule($timeout) {
 
   this.onceAMinute = function(task) {
-
+    $timeout(task, 60);
   };
 
 }]);
