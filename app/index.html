@@ -12,7 +12,9 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
         <!-- build:css(.tmp) styles/main.css -->
-        <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="./fonts/track.css">
+        <link rel="stylesheet" href="./styles/reset.css">
+        <link rel="stylesheet" href="./styles/app.css">
         <!-- endbuild -->
   </head>
   <body>
@@ -28,23 +30,25 @@
     <!-- ============================================ The MEAT ===================================================== -->
 
 
+  <div class="branch-status" ng-controller="BranchStatusController">
+    <div class="branch" ng-repeat="branch in branches">
+      <h2 class="branch-title">{{branch.title}}</h2>
 
+      <card ng-repeat="card in branch.cards" card-data="card"></card>
+    </div>
+  </div>
 
-
-
-
-
-    <div ng-controller="DashboardController as dashboard">
-      {{dashboard.buildStatus}}
+  <div class="github-status" ng-controller="GithubStatusController">
+    <div class="branch-title milestone-title">{{milestone.title}}</div>
+    <div class="progress">
+      <span class="progress-bar"></span>
     </div>
 
-
-
-
-
-
-
-
+    <card ng-repeat="card in milestone.cards" card-data="card"></card>
+    <div class="totals">
+      <card ng-repeat="card in milestone.totalCards" card-data="card"></card>
+    </div>
+  </div>
 
 
     <!-- ======================================================================================================= -->
@@ -69,10 +73,15 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/services/schedule.js"></script>
-        <script src="scripts/directives/dashProgressBar.js"></script>
-        <script src="views/dashProgressBar.html" type="text/ng-template"></script>
         <script src="scripts/services/jenkins.js"></script>
+
+        <script src="scripts/directives/dashProgressBar.js"></script>
+        <script src="scripts/directives/card.js"></script>
+
+
         <script src="scripts/controllers/DashboardController.js"></script>
+        <script src="scripts/controllers/github-status.js"></script>
+        <script src="scripts/controllers/branch-status.js"></script>
         <!-- endbuild -->
 </body>
 </html>
