@@ -48,6 +48,20 @@
     </div>
   </div>
 
+
+  <div class="notification" id="notification">
+    <div class="notification-title">Stable<span>/</span>1.0 <small>Build</small></div>
+    <div class="notification-value">Broken</div>
+    <div class="notification-note">by <strong>Misko Hevery</strong></div>
+  </div>
+
+  <script>
+    document.body.onclick = function () {
+      notification.classList.toggle('notification-active');
+    };
+  </script>
+
+
     <!-- ======================================================================================================= -->
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
