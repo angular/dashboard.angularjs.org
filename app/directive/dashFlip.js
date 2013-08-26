@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dashboard.angularjs.orgApp')
+angular.module('dashboardApp')
   .directive('dashFlip', function ($window) {
     return {
       template: '<div ng-transclude></div>',

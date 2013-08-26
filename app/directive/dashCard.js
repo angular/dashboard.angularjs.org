@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dashboard.angularjs.orgApp')
+angular.module('dashboardApp')
   .directive('dashCard', function () {
     return {
       template: '<div></div>',
