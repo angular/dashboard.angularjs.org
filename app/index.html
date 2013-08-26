@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="./styles/app.css">
         <!-- endbuild -->
   </head>
-  <body ng-controller="GitHubTestController as cntrl">
+  <body>
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -42,27 +42,11 @@
     <div class="branch-title milestone-title">{{milestone.title}}</div>
     <div dash-progress-bar done="20" total="100"></div>
 
-<<<<<<< HEAD
     <card ng-repeat="card in milestone.cards" card-data="card"></card>
     <div class="totals">
       <card ng-repeat="card in milestone.totalCards" card-data="card"></card>
     </div>
   </div>
-=======
-    <pre>
-        Google3 lag: {{cntrl.g3MasterBehind}} / {{cntrl.g3StableBehind}}
-        SHAs since: {{cntrl.shasSinceMasterRelease}} / {{cntrl.shasSinceStableRelease}}
-    </pre>
-
-
-
-
-
-
-
-
->>>>>>> 74a9b8f... GitHub service implementation
-
 
     <!-- ======================================================================================================= -->
 
@@ -78,10 +62,6 @@
     </script>
 
     <script src="bower_components/angular/angular.js"></script>
-
-        <!-- build:js scripts/modules.js -->
-        <script src="bower_components/angular-resource/angular-resource.js"></script>
-        <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
