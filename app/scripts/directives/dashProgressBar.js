@@ -8,7 +8,7 @@ angular.module('dashboardApp').directive("dashProgressBar", function() {
     restrict: "A",
     // TODO(chirayu): get ng-html2js preprocess to work.
     // templateUrl: "views/dashProgressBar.html",
-    template: '<div class="progress"><div class="bar" ng-style="{width: percentDone()}"></div></div>',
+    template: '<div class="progress"><div class="progress-bar" ng-style="{width: percentDone()}"></div></div>',
     scope: {
       done: "@",
       total: "@"
