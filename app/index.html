@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="./styles/app.css">
         <!-- endbuild -->
   </head>
-  <body>
+  <body ng-controller="GitHubTestController as cntrl">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -44,11 +44,26 @@
       <span class="progress-bar"></span>
     </div>
 
+<<<<<<< HEAD
     <card ng-repeat="card in milestone.cards" card-data="card"></card>
     <div class="totals">
       <card ng-repeat="card in milestone.totalCards" card-data="card"></card>
     </div>
   </div>
+=======
+    <pre>
+        Google3 lag: {{cntrl.g3MasterBehind}} / {{cntrl.g3StableBehind}}
+        SHAs since: {{cntrl.shasSinceMasterRelease}} / {{cntrl.shasSinceStableRelease}}
+    </pre>
+
+
+
+
+
+
+
+
+>>>>>>> 74a9b8f... GitHub service implementation
 
 
     <!-- ======================================================================================================= -->
@@ -72,6 +87,7 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
+        <script src="scripts/services/github.js"></script>
         <script src="scripts/services/schedule.js"></script>
         <script src="scripts/services/jenkins.js"></script>
 
