@@ -26,6 +26,12 @@ describe('Service: schedule', function () {
 
       $timeout.flush(60);
       expect(log).toEqual(['task1']);
+
+      $timeout.flush(59);
+      expect(log).toEqual(['task1']);
+
+      $timeout.flush(1);
+      expect(log).toEqual(['task1', 'task1']);
     });
   })
 
