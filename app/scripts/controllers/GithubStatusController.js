@@ -1,7 +1,7 @@
 'use strict';
 
 var GithubCard = function(title, classes) {
-  CardViewData.call(this, title, null, null, ['github-card'].join(classes));
+  CardViewData.call(this, title, null, null, ['github-card'].concat(classes));
 };
 
 GithubCard.prototype.update = function(count, total) {
