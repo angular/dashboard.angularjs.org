@@ -60,7 +60,7 @@ function Github(githubAuth, $http) {
     var counts = {issues: 0, prs: 0};
     var nextPageUrlRegExp = /<([^>]+)>; rel="next"/;
 
-    var handleResponse = function(response) {
+    handleResponse = function (response) {
       response.data.forEach(function(item) {
         if (item.pull_request.diff_url === null) {
           counts.issues++;
@@ -80,6 +80,52 @@ function Github(githubAuth, $http) {
     };
 
     return $http.get(url + '/issues?state=open&milestone=none', {params: githubAuth}).then(handleResponse);
+  };
+
+
+  this.getCountsForMilestone = function (title) {
+    var needClosed = true;
+    var milestoneNumber;
+    var counts = { closedPrs: 0, openPrs: 0, openIssues: 0, closedIssues: 0 };
+    var nextPageUrlRegExp = /<([^>]+)>; rel="next"/;
+
+    var handleResponse = function (response) {
+      response.data.forEach(function(item) {
+        if (item.state === 'closed') {
+          counts[item.pull_request.diff_url ? 'closedPrs' : 'closedIssues']++;
+        }
+        else {
+          counts[item.pull_request.diff_url ? 'openPrs' : 'openIssues']++;
+        }
+      });
+
+      var nextPageUrl = nextPageUrlRegExp.test(response.headers('Link')) &&
+                          nextPageUrlRegExp.exec(response.headers('Link'))[1];
+
+      if (nextPageUrl) {
+        return $http.get(nextPageUrl).then(handleResponse);
+      }
+
+      if (needClosed) {
+        needClosed = false;
+        return $http.get(url + '/issues?state=closed&milestone=' + milestoneNumber).then(handleResponse);
+      }
+
+      return counts;
+    };
+
+
+    var handleMilestones = function (response) {
+      response.data.forEach(function (milestone) {
+        if (milestone.title === title) {
+          milestoneNumber = milestone.number;
+        }
+      });
+
+      return $http.get(url + '/issues?state=open&milestone=' + milestoneNumber).then(handleResponse);
+    };
+
+    return $http.get(url + '/milestones').then(handleMilestones);
   }
 }
 
