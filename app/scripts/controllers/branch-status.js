@@ -1,20 +1,85 @@
 'use strict';
 
 
-var BranchStatusController = function($scope) {
+var BuildCard = function() {
+  CardViewData.call(this, 'build', null, null, ['build-card']);
+};
+
+BuildCard.prototype.update = function(passing, since) {
+  if (passing) {
+    this.content = 'ok';
+    this.note = '* x days* since the last failure';
+    this.classes[1] = 'build-card-ok';
+  } else {
+    this.content = 'broken';
+    this.note = 'for the past *x hours and y minutes*';
+    this.classes[1] = 'build-card-broken';
+  }
+};
+
+
+var Google3Card = function() {
+  CardViewData.call(this, '*google*3', null, 'shas behind', ['google3-card']);
+};
+
+Google3Card.prototype.update = function(count) {
+  this.content = count;
+
+  if (count > 50) {
+    this.classes[1] = 'google3-card-far-behind';
+  } else {
+    this.classes[1] = '';
+  }
+};
+
+
+var ShaCountCard = function() {
+  CardViewData.call(this, 'there have been', null, 'shas since the last release', ['sha-count-card']);
+};
+
+ShaCountCard.prototype.update = function(count) {
+  this.content = count;
+};
+
+
+var BranchStatusController = function($scope, schedule, jenkins, gitHub) {
+  var masterBuildCard = new BuildCard();
+  var stableBuildCard = new BuildCard();
+  var masterGoogle3Card = new Google3Card();
+  var stableGoogle3Card = new Google3Card();
+  var masterReleaseCard = new ShaCountCard();
+  var stableReleaseCard = new ShaCountCard();
+
   $scope.branches = [{
     title: 'master',
-    cards: [
-      new CardViewData('build', 'OK', '*3 days* since the last failure', ['build-card', 'build-card-ok']),
-      new CardViewData('*google*3', '23', 'shas behind', ['google3-card']),
-      new CardViewData('there have been', '85', 'shas since the last release', ['sha-count-card'])
-    ]
+    cards: [masterBuildCard, masterGoogle3Card, masterReleaseCard]
   }, {
     title: 'stable/1.0',
-    cards: [
-      new CardViewData('build', 'broken', 'for the past *2 hours and 15 minutes*', ['build-card', 'build-card-broken']),
-      new CardViewData('*google*3', '22', 'shas behind', ['google3-card', 'google3-card-far-behind']),
-      new CardViewData('there have been', '233', 'shas since the last release', ['sha-count-card'])
-    ]
+    cards: [stableBuildCard, stableGoogle3Card, stableReleaseCard]
   }];
+
+  schedule.onceAMinute(function() {
+    jenkins.buildStatus('angular.js-angular-master').then(function(buildStatus) {
+      masterBuildCard.update(buildStatus.happy, buildStatus.since);
+    });
+
+    jenkins.buildStatus('angular.js-angular-v1.0.x').then(function(buildStatus) {
+      stableBuildCard.update(buildStatus.happy, buildStatus.since);
+    });
+
+    gitHub.getSHAsSince('master', 'g3_v1_x').then(function(count) {
+      masterGoogle3Card.update(count);
+    });
+    gitHub.getSHAsSince('v1.0.x', 'g3_v1_0').then(function(count) {
+      stableGoogle3Card.update(count);
+    });
+
+    gitHub.getSHAsSinceSinceRelease('master').then(function(count) {
+      masterReleaseCard.update(count);
+    });
+
+    gitHub.getSHAsSinceSinceRelease('v1.0.x').then(function(count) {
+      stableReleaseCard.update(count);
+    })
+  });
 };
