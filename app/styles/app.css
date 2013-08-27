@@ -51,13 +51,12 @@ body {
 
 .card {
   float: left;
-  width: 430px;
+  position: relative;
+  width: 510px;
   height: 280px;
   margin: 0 0 30px 40px;
-  padding: 0 40px;
   border-radius: 5px;
   background-color: #fff;
-  box-shadow: rgba(0, 0, 0, .2) 0 -5px 0 inset, rgba(0, 0, 0, .75) 0 1px 8px;
   text-align: center;
 }
 
@@ -66,8 +65,18 @@ body {
 }
 
 
+.card-content {
+  position: relative;
+  height: 100%;
+  padding: 0 40px;
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, .2) 0 -5px 0 inset, rgba(0, 0, 0, .75) 0 1px 8px;
+  text-shadow: rgba(255, 255, 255, .5) 0 1px 1px;
+}
+
+
 .card-title {
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   padding-top: 40px;
   height: 30px;
   line-height: 30px;
@@ -76,8 +85,9 @@ body {
 
 
 .card-value {
+  min-height: 80px;
   padding-top: 15px;
-  padding-bottom: 5px;
+  padding-bottom: 10px;
   font-size: 90px;
   line-height: 80px;
 }
@@ -92,6 +102,9 @@ body {
 
 .build-card-ok {
   background-color: #d6ff99;
+}
+
+.build-card-ok .card-content {
   box-shadow: rgba(0, 0, 0, .2) 0 -5px 0 inset, rgba(0, 0, 0, .75) 0 1px 8px,
     rgba(77, 117, 21, .5) 0 0 70px inset;
 }
@@ -108,6 +121,9 @@ body {
 
 .build-card-broken {
   background-color: #ffbfac;
+}
+
+.build-card-broken .card-content {
   box-shadow: rgba(0, 0, 0, .2) 0 -5px 0 inset, rgba(0, 0, 0, .75) 0 1px 8px,
     rgba(215, 0, 40, .3) 0 0 70px inset;
 }
@@ -131,6 +147,14 @@ body {
   color: #8fb756;
 }
 
+.google3-card .card-title span {
+  color: #aad370;
+}
+
+.google3-card-far-behind .card-title span {
+  color: #ff786e;
+}
+
 .google3-card .card-value {
   color: #4d7515;
 }
@@ -139,9 +163,17 @@ body {
   font-size: 30px;
 }
 
-.google3-card-far-behind {
-  box-shadow: rgba(0, 0, 0, .2) 0 -5px 0 inset, rgba(0, 0, 0, .75) 0 1px 8px,
-    rgba(215, 0, 40, .5) 0 0 70px inset;
+.google3-card .card-content {
+  box-shadow:
+    rgba(0, 0, 0, .75) 0 1px 8px,
+    rgba(0, 0, 0, .2) 0 -5px 0 inset;
+}
+
+.google3-card-far-behind .card-content {
+  box-shadow:
+    rgba(0, 0, 0, .75) 0 1px 8px,
+    rgba(215, 0, 40, .5) 0 0 70px inset,
+    rgba(0, 0, 0, .2) 0 -5px 0 inset;
 }
 
 .google3-card-far-behind .card-title,
@@ -154,10 +186,15 @@ body {
 }
 
 
+.google3-card .card-title,
+.sha-count-card .card-title {
+  margin-bottom: 20px;
+}
+
 .google3-card .card-value,
 .sha-count-card .card-value {
   padding-top: 20px;
-  padding-bottom: 0;
+  padding-bottom: 10px;
   font-size: 120px;
 }
 
@@ -218,11 +255,15 @@ body {
 
 
 .github-card {
-  width: 230px;
+  width: 310px;
 }
 
 .github-card .card-title {
   font-size: 25px;
+}
+
+.milestone-card {
+  margin-bottom: 20px;
 }
 
 .pr-card {
@@ -231,10 +272,6 @@ body {
 
 .issue-card {
   text-align: right;
-}
-
-.untriaged-card {
-  margin-bottom: 20px;
 }
 
 .untriaged-card .card-title {
@@ -276,10 +313,60 @@ body {
   color: #d70028;
 }
 
+.github-card .card-title {
+  font-size: 25px;
+}
+
+.milestone-card {
+  margin-bottom: 20px;
+}
+
+.pr-card {
+  text-align: left;
+}
+
+.issue-card {
+  text-align: right;
+}
+
+.untriaged-card .card-title {
+  font-size: 30px;
+}
+
+.untriaged-card .card-title span {
+  display: block;
+  font-size: 25px;
+}
+
+.untriaged-card .card-value {
+  padding-top: 60px;
+  font-size: 120px;
+}
+
+.pr-card .card-title,
+.issue-card .card-title {
+  color: #989898;
+}
+
+.pr-card .card-value,
+.issue-card .card-value {
+  color: #525252;
+}
+
+.pr-card .card-note,
+.issue-card .card-note {
+  color: #C6C6C6;
+}
+
+.pr-card .card-note strong,
+.issue-card .card-note strong {
+  color: #919191;
+}
+
 
 .totals {
   clear: both;
-  padding-top: 10px;
+  padding-top: 12px;
   overflow: hidden;
   position: relative;
   background-color: #383838;
@@ -287,7 +374,7 @@ body {
   box-shadow: rgba(0, 0, 0, .2) 0 0 150px inset;
 }
 
-
+.untriaged-card,
 .total-card {
   background-color: transparent;
   box-shadow: none;
@@ -295,11 +382,56 @@ body {
   text-shadow: rgba(0, 0, 0, .5) 0 3px 5px;
 }
 
-.total-card .card-title {
-  padding-top: 70px;
+.untriaged-card {
+  background: #ffbfac;
+  background: #fff;
+}
+
+.untriaged-card-none {
+  background: #404040;
+}
+
+.untriaged-card .card-content {
+  box-shadow: rgba(0, 0, 0, .2) 0 -5px 0 inset, rgba(0, 0, 0, .75) 0 1px 8px,
+    rgba(215, 0, 40, .3) 0 0 70px inset;
+}
+
+.untriaged-card-none .card-content {
+  box-shadow: rgba(0, 0, 0, .2) 0 -5px 0 inset, rgba(0, 0, 0, .75) 0 1px 8px,
+    rgba(0, 0, 0, .2) 0 0 100px inset;
+}
+
+.untriaged-card .card-title {
+  color: #ff5a55;
+}
+
+.untriaged-card-none .card-title {
+  color: #989898;
+  text-shadow: rgba(0, 0, 0, .3) 0 1px 3px;
+}
+
+.untriaged-pr-card .card-value,
+.untriaged-issue-card .card-value {
+  color: #d70028;
+  text-shadow: rgba(255, 255, 255, .4) 0 1px 0px;
+}
+
+.untriaged-card-none .card-value {
+  color: #d5574c;
+  text-shadow: rgba(0, 0, 0, .3) 0 2px 3px;
+}
+
+.untriaged-card-none .card-value {
+  color: #9cc563;
+}
+
+.total-card .card-content {
+  box-shadow: none;
+  padding-bottom: 5px;
 }
 
 .total-card .card-title {
+  padding-top: 65px;
   font-size: 30px;
 }
 
@@ -310,5 +442,104 @@ body {
 
 .total-card .card-value {
   padding-top: 35px;
-  color: #F1F1F1;
+  color: #989898;
+}
+
+
+.card-graph {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  -webkit-mask-image: linear-gradient(top, #000, #fff);
+}
+
+.card-graph svg {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.google3-card .card-graph svg .graph-sparkline {
+  fill: #d6ff99;
+}
+  
+.google3-card-far-behind .card-graph svg .graph-sparkline {
+  fill: #ffcdba;
+}
+
+.untriaged-card .card-graph svg .graph-sparkline {
+  fill: #ffcdba;
+  /*fill: #ffa38b;*/
+}
+
+.untriaged-card-none .card-graph svg .graph-sparkline {
+  fill: #666;
+}
+
+
+
+.notification {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #d70028;
+  opacity: 0;
+  color: #fff;
+  font-size: 80px;
+  text-align: center;
+  text-shadow: rgba(0, 0, 0, .4) 0 -2px 0;
+}
+
+.notification-title {
+  margin-bottom: 190px;
+  padding-top: 120px;
+  line-height: 70px;
+}
+
+.notification-title span,
+.notification-title small,
+.notification-note {
+  color: #ff9687;
+}
+
+.notification-title small {
+  display: block;
+  font-size: 60px;
+}
+
+.notification-value {
+  min-height: 200px;
+  line-height: 200px;
+  font-size: 240px;
+}
+
+.notification-note {
+  margin-top: 205px;
+}
+
+.notification-note strong {
+  color: #fff;
+}
+
+
+.notification-active {
+  -webkit-animation: notification-blink 2s linear infinite;
+}
+
+@-webkit-keyframes "notification-blink" {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
 }

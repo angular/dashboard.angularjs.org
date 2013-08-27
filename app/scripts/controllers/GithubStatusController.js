@@ -1,7 +1,7 @@
 'use strict';
 
 var GithubCard = function(title, classes) {
-  CardViewData.call(this, title, null, null, ['github-card'].join(classes));
+  CardViewData.call(this, title, null, null, ['github-card'].concat(classes));
 };
 
 GithubCard.prototype.update = function(count, total) {
@@ -13,8 +13,8 @@ GithubCard.prototype.update = function(count, total) {
 };
 
 app.controller('GithubStatusController', function GithubStatusController($scope, schedule, github) {
-  var milestonePRsCard = new GithubCard('Pull requests', ['pr-card']);
-  var milestoneIssuesCard = new GithubCard('Issues', ['issue-card']);
+  var milestonePRsCard = new GithubCard('Pull requests', ['milestone-card', 'pr-card']);
+  var milestoneIssuesCard = new GithubCard('Issues', ['milestone-card', 'issue-card']);
   var untriagedPRsCard = new GithubCard('Untriaged _Pull requests_', ['untriaged-card', 'pr-card', 'untriaged-pr-card']);
   var untriagedIssuesCard = new GithubCard('Untriaged _Issues_', ['untriaged-card', 'issue-card', 'untriaged-issue-card']);
   var totalPRsCard = new GithubCard('Total _Pull requests_', ['total-card', 'pr-card', 'total-pr-card']);
@@ -24,8 +24,8 @@ app.controller('GithubStatusController', function GithubStatusController($scope,
     title: '1.2.0-RC2',
     total: 1,
     done: 0,
-    cards: [milestonePRsCard, milestoneIssuesCard, untriagedPRsCard, untriagedIssuesCard],
-    totalCards: [totalPRsCard, totalIssuesCard]
+    cards: [milestonePRsCard, milestoneIssuesCard],
+    totalCards: [totalPRsCard, totalIssuesCard, untriagedPRsCard, untriagedIssuesCard]
   };
 
   schedule.onceAMinute(function() {

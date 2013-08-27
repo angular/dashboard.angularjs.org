@@ -5,7 +5,7 @@
 @font-face {
     font-family: 'Track';
     src: url('track-webfont.eot');
-    src: local('Track'),
+    src:
          url('track-webfont.eot?#iefix') format('embedded-opentype'),
          url('track-webfont.woff') format('woff'),
          url('track-webfont.ttf') format('truetype');
