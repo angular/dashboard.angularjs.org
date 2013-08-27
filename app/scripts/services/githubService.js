@@ -2,20 +2,20 @@
 
 angular
     .module('github', [])
-    .value('gitHubAuth', {
+    .value('githubAuth', {
       client_id: localStorage.getItem('github.client_id'),
       client_secret: localStorage.getItem('github.client_secret')
     })
-    .service('gitHub', GitHub);
+    .service('github', Github);
 
-function GitHub(gitHubAuth, $http) {
+function Github(githubAuth, $http) {
   var url = 'https://api.github.com/repos/angular/angular.js';
   var self = this;
 
   this.getTags = function() {
     return $http.
         get(url + '/tags', {
-          params: gitHubAuth
+          params: githubAuth
         }).
         then(function(response) {
           return response.data;
@@ -37,7 +37,7 @@ function GitHub(gitHubAuth, $http) {
   this.getSHAsSince = function(branchName, sinceTag) {
     return $http.
         get(url + '/compare/' + sinceTag + '...' + branchName, {
-          params: gitHubAuth
+          params: githubAuth
         }).
         then(function(response) {
           return response.data.ahead_by;
@@ -79,7 +79,7 @@ function GitHub(gitHubAuth, $http) {
       return counts;
     };
 
-    return $http.get(url + '/issues?state=open&milestone=none', {params: gitHubAuth}).then(handleResponse);
+    return $http.get(url + '/issues?state=open&milestone=none', {params: githubAuth}).then(handleResponse);
   }
 }
 

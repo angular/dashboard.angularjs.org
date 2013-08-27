@@ -67,7 +67,7 @@ ShaCountCard.prototype.update = function(count) {
 };
 
 
-app.controller('BranchStatusController', function BranchStatusController($scope, schedule, jenkins, gitHub) {
+app.controller('BranchStatusController', function BranchStatusController($scope, schedule, jenkins, github) {
   var masterBuildCard = new BuildCard();
   var stableBuildCard = new BuildCard();
   var masterGoogle3Card = new Google3Card();
@@ -92,18 +92,18 @@ app.controller('BranchStatusController', function BranchStatusController($scope,
       stableBuildCard.update(buildStatus.happy, buildStatus.since);
     });
 
-    gitHub.getSHAsSince('master', 'g3_v1_x').then(function(count) {
+    github.getSHAsSince('master', 'g3_v1_x').then(function(count) {
       masterGoogle3Card.update(count);
     });
-    gitHub.getSHAsSince('v1.0.x', 'g3_v1_0').then(function(count) {
+    github.getSHAsSince('v1.0.x', 'g3_v1_0').then(function(count) {
       stableGoogle3Card.update(count);
     });
 
-    gitHub.getSHAsSinceSinceRelease('master').then(function(count) {
+    github.getSHAsSinceSinceRelease('master').then(function(count) {
       masterReleaseCard.update(count);
     });
 
-    gitHub.getSHAsSinceSinceRelease('v1.0.x').then(function(count) {
+    github.getSHAsSinceSinceRelease('v1.0.x').then(function(count) {
       stableReleaseCard.update(count);
     })
   });

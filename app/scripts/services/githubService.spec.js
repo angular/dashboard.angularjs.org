@@ -8,16 +8,16 @@ describe('github', function() {
 
   beforeEach(module('github'));
   beforeEach(module(function($provide) {
-    $provide.value('gitHubAuth', { client_id: 'ID', client_secret: 'SECRET' });
+    $provide.value('githubAuth', { client_id: 'ID', client_secret: 'SECRET' });
   }));
 
-  it('should return a list of tags', inject(function(gitHub, $rootScope, $httpBackend) {
+  it('should return a list of tags', inject(function(github, $rootScope, $httpBackend) {
     $httpBackend.expectGET(gitUrl('/tags')).respond([
       {name: 'tag1'}
     ]);
 
     var tags;
-    gitHub.getTags().then(function(v) { tags = v; });
+    github.getTags().then(function(v) { tags = v; });
     $rootScope.$digest();
     $httpBackend.flush();
 
