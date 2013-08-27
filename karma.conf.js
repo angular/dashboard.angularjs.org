@@ -17,10 +17,9 @@ module.exports = function(config) {
     files: [
       'app/bower_components/angular/angular.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
-      'app/views/*.html',
-      'app/scripts/*.js',
-      'app/scripts/*.js',
+      'app/scripts/app.js',
       'app/scripts/**/*.js',
+      'app/views/*.html',
       'test/mock/**/*.js',
       'test/spec/**/*.js'
     ],
@@ -56,8 +55,8 @@ module.exports = function(config) {
     singleRun: false,
 
     ngHtml2JsPreprocessor: {
-      moduleName: 'dashboardApp'
+      moduleName: 'dashboardApp',
+      stripPrefix: 'app/'
     }
-
   });
 };
