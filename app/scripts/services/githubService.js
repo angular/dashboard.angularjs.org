@@ -60,7 +60,7 @@ function Github(githubAuth, $http) {
     var counts = {issues: 0, prs: 0};
     var nextPageUrlRegExp = /<([^>]+)>; rel="next"/;
 
-    handleResponse = function (response) {
+    var handleResponse = function (response) {
       response.data.forEach(function(item) {
         if (item.pull_request.diff_url === null) {
           counts.issues++;
