@@ -44,26 +44,25 @@
       <span class="progress-bar"></span>
     </div>
 
-<<<<<<< HEAD
     <card ng-repeat="card in milestone.cards" card-data="card"></card>
     <div class="totals">
       <card ng-repeat="card in milestone.totalCards" card-data="card"></card>
     </div>
   </div>
-=======
+
     <pre>
         Google3 lag: {{cntrl.g3MasterBehind}} / {{cntrl.g3StableBehind}}
         SHAs since: {{cntrl.shasSinceMasterRelease}} / {{cntrl.shasSinceStableRelease}}
+        Milestone:  PRs   /  Issues
+            Open: {{ctrl.milestone.pr.open}} / {{ctrl.milestone.issue.open}}
+            Closed: {{ctrl.milestone.pr.closed}} / {{ctrl.milestone.issue.closed}}
+            Total: {{ctrl.milestone.pr.total}} / {{ctrl.milestone.issue.total}}
+
+                    PRs   / Issues
+            Untriaged: {{ctrl.pr.untriaged}} / {{ctrl.issue.untriaged}}
+            Open: {{ctrl.pr.open}} / {{ctrl.issue.open}}
     </pre>
 
-
-
-
-
-
-
-
->>>>>>> 74a9b8f... GitHub service implementation
 
 
     <!-- ======================================================================================================= -->

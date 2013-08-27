@@ -53,6 +53,35 @@ function GitHub(gitHubAuth, $http) {
         then(function(latestTag) {
           return self.getSHAsSince(branchName, latestTag);
         });
+  };
+
+  this.getMilestones = function() {
+    return $http.
+        get(url + '/milestones', {
+          params: gitHubAuth
+        }).
+        then(function(response) {
+          return response.data;
+        });
   }
+
+  this.getMilestoneId = function(name) {
+    return this.getMilestones().then(function(milestones) {
+      for (var i = 0, ii = milestones.length; i < ii; i++) {
+        var milestone = milestones[i];
+        if (milestone.title == name) {
+          return milestone.id;
+        }
+      }
+      return null;
+    });
+  };
+
+  this.getWorkloadStats = function(milestone) {
+    return getMilestoneId(milestone).
+        then(function(milestoneId) {
+
+        });
+  };
 }
 
