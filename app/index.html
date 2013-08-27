@@ -40,7 +40,7 @@
 
   <div class="github-status" ng-controller="GithubStatusController">
     <div class="branch-title milestone-title" bind-markdown="milestone.title"></div>
-    <div dash-progress-bar done="20" total="100"></div>
+    <progress-bar done="20" total="100"></progress-bar>
 
     <card ng-repeat="card in milestone.cards" card-data="card"></card>
     <div class="totals">
@@ -69,14 +69,14 @@
         <script src="scripts/services/schedule.js"></script>
         <script src="scripts/services/jenkins.js"></script>
 
-        <script src="scripts/directives/dashProgressBar.js"></script>
-        <script src="scripts/directives/card.js"></script>
-        <script src="scripts/directives/bind-markdown.js"></script>
+        <script src="scripts/directives/progressBarDirective.js"></script>
+        <script src="scripts/directives/cardDirective.js"></script>
+        <script src="scripts/directives/bindMarkdownDirective.js"></script>
 
 
         <script src="scripts/controllers/DashboardController.js"></script>
-        <script src="scripts/controllers/github-status.js"></script>
-        <script src="scripts/controllers/branch-status.js"></script>
+        <script src="scripts/controllers/GithubStatusController.js"></script>
+        <script src="scripts/controllers/BranchStatusController.js"></script>
         <!-- endbuild -->
 </body>
 </html>

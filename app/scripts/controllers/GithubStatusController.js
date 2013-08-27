@@ -1,10 +1,7 @@
 'use strict';
 
 
-var GithubStatusController = function($scope, gitHub) {
-
-  $scope.github = gitHub.getUntriagedCounts();
-
+app.controller('GithubStatusController', function GithubStatusController($scope) {
   $scope.milestone = {
     title: '1.2.0-RC2',
     cards: [
@@ -19,4 +16,4 @@ var GithubStatusController = function($scope, gitHub) {
       new CardViewData('Total _Issues_', '420', null, ['github-card', 'total-card', 'issue-card', 'total-issue-card'])
     ]
   };
-};
+});

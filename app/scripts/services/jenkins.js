@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dashboardApp').service('jenkins', ['$http', function Jenkins($http) {
+app.service('jenkins', ['$http', function Jenkins($http) {
 
   this.buildStatus = function(jobName) {
 

@@ -1,9 +1,6 @@
 'use strict';
 
 
-var app = angular.module('dashboardApp');
-
-
 var CardViewData = function(title, content, note, classes) {
   this.title = title;
   this.content = content;

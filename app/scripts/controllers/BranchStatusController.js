@@ -67,7 +67,7 @@ ShaCountCard.prototype.update = function(count) {
 };
 
 
-var BranchStatusController = function($scope, schedule, jenkins, gitHub) {
+app.controller('BranchStatusController', function BranchStatusController($scope, schedule, jenkins, gitHub) {
   var masterBuildCard = new BuildCard();
   var stableBuildCard = new BuildCard();
   var masterGoogle3Card = new Google3Card();
@@ -107,4 +107,4 @@ var BranchStatusController = function($scope, schedule, jenkins, gitHub) {
       stableReleaseCard.update(count);
     })
   });
-};
+});
