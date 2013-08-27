@@ -1,7 +1,10 @@
 'use strict';
 
 
-var GithubStatusController = function($scope) {
+var GithubStatusController = function($scope, gitHub) {
+
+  $scope.github = gitHub.getUntriagedCounts();
+
   $scope.milestone = {
     title: '1.2.0-RC2',
     cards: [

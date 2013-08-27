@@ -25,4 +25,10 @@ describe('github', function() {
       {name: 'tag1'}
     ]);
   }));
+
+
+  describe('untriagedCounts', function() {
+    // Link: <https://api.github.com/repositories/460078/issues?state=open&page=2>; rel="next", <https://api.github.com/repositories/460078/issues?state=open&page=17>; rel="last"
+    // [{pull_request: {diff_url: "https://..."}}]
+  });
 });

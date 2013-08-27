@@ -54,5 +54,34 @@ function GitHub(gitHubAuth, $http) {
           return self.getSHAsSince(branchName, latestTag);
         });
   }
+
+
+  this.getUntriagedCounts = function() {
+    var counts = {issues: 0, prs: 0};
+    var nextPageUrlRegExp = /<([^>]+)>; rel="next"/;
+
+    var handleResponse = function(response) {
+      //console.log('got response for', response.config.url);
+
+      response.data.forEach(function(item) {
+        if (item.pull_request.diff_url === null) {
+          counts.issues++;
+        } else {
+          counts.prs++;
+        }
+      });
+
+      var nextPageUrl = nextPageUrlRegExp.test(response.headers('Link')) &&
+                          nextPageUrlRegExp.exec(response.headers('Link'))[1];
+
+      if (nextPageUrl) {
+        return $http.get(nextPageUrl).then(handleResponse);
+      }
+
+      return counts;
+    };
+
+    return $http.get(url + '/issues?state=open&milestone=none').then(handleResponse);
+  }
 }
 
