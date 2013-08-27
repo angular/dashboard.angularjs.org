@@ -8,12 +8,12 @@ app.directive('progressBar', function() {
     restrict: 'E',
     templateUrl: 'views/progressBar.html',
     scope: {
-      done: '@',
-      total: '@'
+      done: '=',
+      total: '='
     },
     controller: function($scope, $exceptionHandler) {
       $scope.percentDone = function percentDone() {
-        var percentage = ($scope.done * 100 / $scope.total);
+        var percentage = $scope.done * 100 / $scope.total;
         if (!isNaN(percentage) && percentage >= 0 && percentage <= 100) {
           return percentage + '%';
         } else {

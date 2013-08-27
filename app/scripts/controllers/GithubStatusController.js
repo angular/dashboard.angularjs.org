@@ -22,6 +22,8 @@ app.controller('GithubStatusController', function GithubStatusController($scope,
 
   $scope.milestone = {
     title: '1.2.0-RC2',
+    total: 100,
+    done: 50,
     cards: [milestonePRsCard, milestoneIssuesCard, untriagedPRsCard, untriagedIssuesCard],
     totalCards: [totalPRsCard, totalIssuesCard]
   };

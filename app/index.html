@@ -40,7 +40,7 @@
 
   <div class="github-status" ng-controller="GithubStatusController">
     <div class="branch-title milestone-title" bind-markdown="milestone.title"></div>
-    <progress-bar done="20" total="100"></progress-bar>
+    <progress-bar done="milestone.done" total="milestone.total"></progress-bar>
 
     <card ng-repeat="card in milestone.cards" card-data="card"></card>
     <div class="totals">
