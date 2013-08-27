@@ -61,8 +61,6 @@ function GitHub(gitHubAuth, $http) {
     var nextPageUrlRegExp = /<([^>]+)>; rel="next"/;
 
     var handleResponse = function(response) {
-      //console.log('got response for', response.config.url);
-
       response.data.forEach(function(item) {
         if (item.pull_request.diff_url === null) {
           counts.issues++;
@@ -81,7 +79,7 @@ function GitHub(gitHubAuth, $http) {
       return counts;
     };
 
-    return $http.get(url + '/issues?state=open&milestone=none').then(handleResponse);
+    return $http.get(url + '/issues?state=open&milestone=none', {params: gitHubAuth}).then(handleResponse);
   }
 }
 
