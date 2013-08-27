@@ -2,8 +2,8 @@
 
 describe('github', function() {
   function gitUrl(url) {
-    return "https://api.github.com/repos/angular/angular.js" + url +
-        "?client_id=ID&client_secret=SECRET";
+    return 'https://api.github.com/repos/angular/angular.js' + url +
+        '?client_id=ID&client_secret=SECRET';
   }
 
   beforeEach(module('github'));
