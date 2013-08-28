@@ -99,11 +99,11 @@ app.controller('BranchStatusController', function BranchStatusController($scope,
       stableGoogle3Card.update(count);
     });
 
-    github.getSHAsSinceSinceRelease('master').then(function(count) {
+    github.getSHAsSinceRelease('master').then(function(count) {
       masterReleaseCard.update(count);
     });
 
-    github.getSHAsSinceSinceRelease('v1.0.x').then(function(count) {
+    github.getSHAsSinceRelease('v1.0.x').then(function(count) {
       stableReleaseCard.update(count);
     })
   });
