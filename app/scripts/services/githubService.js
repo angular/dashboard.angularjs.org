@@ -13,12 +13,18 @@ function Github(githubAuth, $http) {
   var self = this;
 
   this.getTags = function() {
-    return $http.
-        get(url + '/tags', {
+    var cacheKey = 'github:getTags';
+
+    return $http
+        .get(url + '/tags', {
           params: githubAuth
-        }).
-        then(function(response) {
+        })
+        .then(function(response) {
+          localStorage[cacheKey] = JSON.stringify(response.data);
           return response.data;
+        }, function() {
+          var cacheValue = localStorage[cacheKey];
+          return cacheValue ? JSON.parse(cacheValue) : [];
         });
   };
 
@@ -35,23 +41,38 @@ function Github(githubAuth, $http) {
   };
 
   this.getSHAsSince = function(branchName, sinceTag) {
-    return $http.
-        get(url + '/compare/' + sinceTag + '...' + branchName, {
+    var cacheKey = 'github:getSHAsSince:' + branchName + ':' + sinceTag;
+
+    return $http
+        .get(url + '/compare/' + sinceTag + '...' + branchName, {
           params: githubAuth
-        }).
-        then(function(response) {
+        })
+        .then(function(response) {
+          localStorage[cacheKey] = response.data.ahead_by;
           return response.data.ahead_by;
+        }, function() {
+          var cacheValue = localStorage[cacheKey];
+          return cacheValue ? Number(cacheValue) : '?';
         });
   };
 
-  this.getSHAsSinceSinceRelease = function(branchName) {
+  this.getSHAsSinceRelease = function(branchName) {
     var startingWithTag = (branchName == 'master')
         ? 'v1.2'
         : branchName.replace(/\.x$/, '');
-    return this.
-        getLatestTagStartingWith(startingWithTag).
-        then(function(latestTag) {
-          return self.getSHAsSince(branchName, latestTag);
+
+    var cacheKey = 'github:getSHAsSinceRelease:' + branchName;
+
+    return this
+        .getLatestTagStartingWith(startingWithTag)
+        .then(function(latestTag) {
+          return self.getSHAsSince(branchName, latestTag).then(function(shas) {
+            localStorage[cacheKey] = shas;
+            return shas;
+          });
+        }, function() {
+          var cacheValue = localStorage[cacheKey];
+          return cacheValue ? Number(cacheValue) : '?';
         });
   }
 
@@ -60,6 +81,8 @@ function Github(githubAuth, $http) {
     var counts = {issues: 0, prs: 0};
     var nextPageUrlRegExp = /<([^>]+)>; rel="next"/;
 
+    var cacheKey = 'github:getUntriagedCounts';
+
     var handleResponse = function (response) {
       response.data.forEach(function(item) {
         if (item.pull_request.diff_url === null) {
@@ -76,16 +99,26 @@ function Github(githubAuth, $http) {
         return $http.get(nextPageUrl).then(handleResponse);
       }
 
+      localStorage[cacheKey] = JSON.stringify(counts);
       return counts;
     };
 
-    return $http.get(url + '/issues?state=open&milestone=none', {params: githubAuth}).then(handleResponse);
+    var handleError = function () {
+      var cacheValue = localStorage[cacheKey];
+      return cacheValue ? JSON.parse(cacheValue) : {issues: '?', prs: '?'};
+    };
+
+    return $http
+        .get(url + '/issues?state=open&milestone=none', {params: githubAuth})
+        .then(handleResponse, handleError);
   };
 
 
-  this.getAllOpenIssues = function() {
+  this.getAllOpenCounts = function() {
     var counts = {issues: 0, prs: 0};
     var nextPageUrlRegExp = /<([^>]+)>; rel="next"/;
+
+    var cacheKey = 'github:getAllOpenCounts';
 
     var handleResponse = function (response) {
       response.data.forEach(function(item) {
@@ -103,10 +136,18 @@ function Github(githubAuth, $http) {
         return $http.get(nextPageUrl).then(handleResponse);
       }
 
+      localStorage[cacheKey] = JSON.stringify(counts);
       return counts;
     };
 
-    return $http.get(url + '/issues?state=open', {params: githubAuth}).then(handleResponse);
+    var handleError = function () {
+      var cacheValue = localStorage[cacheKey];
+      return cacheValue ? JSON.parse(cacheValue) : {issues: '?', prs: '?'};
+    };
+
+    return $http
+        .get(url + '/issues?state=open', {params: githubAuth})
+        .then(handleResponse, handleError);
   };
 
 
@@ -115,6 +156,8 @@ function Github(githubAuth, $http) {
     var milestoneNumber;
     var counts = { closedPrs: 0, openPrs: 0, openIssues: 0, closedIssues: 0 };
     var nextPageUrlRegExp = /<([^>]+)>; rel="next"/;
+
+    var cacheKey = 'github:getCountsForMilestone:' + title;
 
     var handleResponse = function (response) {
       response.data.forEach(function(item) {
@@ -135,10 +178,23 @@ function Github(githubAuth, $http) {
 
       if (needClosed) {
         needClosed = false;
-        return $http.get(url + '/issues?state=closed&milestone=' + milestoneNumber, {params: githubAuth}).then(handleResponse);
+        return $http
+            .get(url + '/issues?state=closed&milestone=' + milestoneNumber, {params: githubAuth})
+            .then(handleResponse, handleError);
       }
 
+      localStorage[cacheKey] = JSON.stringify(counts);
       return counts;
+    };
+
+    var handleError = function () {
+      var cacheValue = localStorage[cacheKey];
+      return cacheValue ? JSON.parse(cacheValue) : {
+        closedPrs: '?',
+        openPrs: '?',
+        openIssues: '?',
+        closedIssues: '?'
+      };
     };
 
 
@@ -149,10 +205,14 @@ function Github(githubAuth, $http) {
         }
       });
 
-      return $http.get(url + '/issues?state=open&milestone=' + milestoneNumber, {params: githubAuth}).then(handleResponse);
+      return $http
+          .get(url + '/issues?state=open&milestone=' + milestoneNumber, {params: githubAuth})
+          .then(handleResponse, handleError);
     };
 
-    return $http.get(url + '/milestones', {params: githubAuth}).then(handleMilestones);
+    return $http
+        .get(url + '/milestones', {params: githubAuth})
+        .then(handleMilestones, handleError);
   }
 }
 

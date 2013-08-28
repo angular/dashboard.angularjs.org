@@ -8,7 +8,7 @@ GithubCard.prototype.update = function(count, total) {
   this.content = count;
 
   if (angular.isDefined(total)) {
-    this.note = 'out of ' + total;
+    this.note = 'out of *' + total + '*';
   }
 };
 
@@ -18,9 +18,10 @@ var UntriagedCard = function (title, classes) {
 };
 
 UntriagedCard.prototype.update = function (count) {
-  var index = this.classes.indexOf('untriaged-card-none');
+  this.content = count;
 
-  if (!count) {
+  var index = this.classes.indexOf('untriaged-card-none');
+  if (!count || count === '?') {
     if (index === -1) {
       this.classes.push('untriaged-card-none');
     }
@@ -49,21 +50,21 @@ app.controller('GithubStatusController', function GithubStatusController($scope,
   };
 
   schedule.onceAMinute(function() {
-    github.getUntriagedCounts().then(function(count) {
-      untriagedPRsCard.update(count.prs);
-      untriagedIssuesCard.update(count.issues);
+    github.getUntriagedCounts().then(function(counts) {
+      untriagedPRsCard.update(counts.prs);
+      untriagedIssuesCard.update(counts.issues);
     });
 
     github.getCountsForMilestone('1.2.0-rc2').then(function(stats) {
-      milestonePRsCard.update(stats.openPrs, stats.openPrs + stats.closedPrs);
-      milestoneIssuesCard.update(stats.openIssues, stats.openIssues + stats.closedIssues);
+      milestonePRsCard.update(stats.openPrs, (stats.openPrs !== '?') ? stats.openPrs + stats.closedPrs : '?');
+      milestoneIssuesCard.update(stats.openIssues, (stats.openIssues !== '?') ? stats.openIssues + stats.closedIssues : '?');
       $scope.milestone.done = stats.closedPrs + stats.closedIssues;
       $scope.milestone.total = stats.openPrs + stats.closedPrs + stats.openIssues + stats.closedIssues;
     });
 
-    github.getAllOpenIssues().then(function(count) {
-      totalPRsCard.update(count.prs);
-      totalIssuesCard.update(count.issues);
+    github.getAllOpenCounts().then(function(counts) {
+      totalPRsCard.update(counts.prs);
+      totalIssuesCard.update(counts.issues);
     });
   });
 });
