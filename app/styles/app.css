@@ -526,10 +526,10 @@ body {
 
 
 .notification-active {
-  -webkit-animation: notification-blink 2s linear infinite;
+  animation: notification-blink 2s linear infinite;
 }
 
-@-webkit-keyframes "notification-blink" {
+@keyframes notification-blink {
   0% {
     opacity: 0;
   }
