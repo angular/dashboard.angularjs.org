@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="./styles/app.css">
         <!-- endbuild -->
   </head>
-  <body>
+  <body ng-controller="MainController">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -49,17 +49,14 @@
   </div>
 
 
-  <div class="notification" id="notification">
-    <div class="notification-title">Stable<span>/</span>1.0 <small>Build</small></div>
+  <div class="notification" id="notification" ng-class="{'notification-active':brokenBuild}">
+    <div class="notification-title">
+      <div bind-markdown="brokenBuild.branch"></div>
+      <small>Build</small>
+    </div>
     <div class="notification-value">Broken</div>
     <div class="notification-note">by <strong>Misko Hevery</strong></div>
   </div>
-
-  <script>
-    document.body.onclick = function () {
-      notification.classList.toggle('notification-active');
-    };
-  </script>
 
 
     <!-- ======================================================================================================= -->
@@ -88,6 +85,7 @@
         <script src="scripts/directives/bindMarkdownDirective.js"></script>
 
 
+        <script src="scripts/controllers/MainController.js"></script>
         <script src="scripts/controllers/GithubStatusController.js"></script>
         <script src="scripts/controllers/BranchStatusController.js"></script>
         <script src="directive/dashGraph.js"></script>
