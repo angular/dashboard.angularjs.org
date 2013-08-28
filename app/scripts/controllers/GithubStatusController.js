@@ -12,11 +12,31 @@ GithubCard.prototype.update = function(count, total) {
   }
 };
 
+
+var UntriagedCard = function (title, classes) {
+
+};
+
+UntriagedCard.prototype.update = function (count) {
+  var index = this.classes.indexOf('untriaged-card-none');
+
+  if (!count) {
+    if (index === -1) {
+      this.classes.push('untriaged-card-none');
+    }
+  } else {
+    if (index !== -1) {
+      this.classes.splice(index, 1);
+    }
+  }
+};
+
+
 app.controller('GithubStatusController', function GithubStatusController($scope, schedule, github) {
   var milestonePRsCard = new GithubCard('Pull requests', ['milestone-card', 'pr-card']);
   var milestoneIssuesCard = new GithubCard('Issues', ['milestone-card', 'issue-card']);
-  var untriagedPRsCard = new GithubCard('Untriaged _Pull requests_', ['untriaged-card', 'pr-card', 'untriaged-pr-card']);
-  var untriagedIssuesCard = new GithubCard('Untriaged _Issues_', ['untriaged-card', 'issue-card', 'untriaged-issue-card']);
+  var untriagedPRsCard = new GithubCard('Untriaged _Pull requests_', ['untriaged-card', 'pr-card', 'untriaged-pr-card', 'untriaged-card-none']);
+  var untriagedIssuesCard = new GithubCard('Untriaged _Issues_', ['untriaged-card', 'issue-card', 'untriaged-issue-card', 'untriaged-card-none']);
   var totalPRsCard = new GithubCard('Total _Pull requests_', ['total-card', 'pr-card', 'total-pr-card']);
   var totalIssuesCard = new GithubCard('Total _Issues_', ['total-card', 'issue-card', 'total-issue-card']);
 
