@@ -1,0 +1,8 @@
+<div class="card" ng-class="data.classes">
+  <dash-graph dash-graph-model="data.graph" ng-if="data.graph"></dash-graph>
+  <div class="card-content">
+    <h3 class="card-title" bind-markdown="data.title"></h3>
+    <div class="card-value">{{data.content}}</div>
+    <p ng-if="data.note" class="card-note" bind-markdown="data.note"></p>
+  </div>
+</div>

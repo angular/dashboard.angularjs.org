@@ -1,9 +1,7 @@
-**/.DS_Store
-nbproject
-manifest.mf
-build.xml
-
-.project
-.settings
-.idea/*
-gitFetchSite.log
+node_modules
+dist
+.tmp
+.sass-cache
+.DS_Store
+app/bower_components
+.idea
