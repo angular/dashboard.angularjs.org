@@ -9,6 +9,7 @@
   <pre><?php echo `git checkout origin/master -f`; ?></pre>
   <pre><?php echo `git status`; ?></pre>
   <pre><?php echo `git log -n1`; ?></pre>
+  <pre><?php echo `bower install`; ?></pre>
   <?php `git log -n1 >> gitFetchSite.log`; ?>
 </body>
 </html>
