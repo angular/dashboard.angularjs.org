@@ -406,6 +406,8 @@ body {
   color: #ff5a55;
 }
 
+.total-card .card-title,
+.total-card .card-value,
 .untriaged-card-none .card-title {
   color: #989898;
   text-shadow: rgba(0, 0, 0, .3) 0 1px 3px;
@@ -443,7 +445,6 @@ body {
 
 .total-card .card-value {
   padding-top: 35px;
-  color: #989898;
 }
 
 
