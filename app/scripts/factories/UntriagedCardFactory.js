@@ -2,9 +2,9 @@
 
 
 app.factory('createUntriagedCard', function (createCard) {
-  var UntriagedCardViewModel = function(title, content, note, classes) {
+  var UntriagedCardViewModel = function(title, classes) {
     if (!(this instanceof UntriagedCardViewModel)) {
-      return new UntriagedCardViewModel(title, content, note, classes);
+      return new UntriagedCardViewModel(title, classes);
     }
 
     createCard.call(this, title, null, null,

@@ -2,9 +2,9 @@
 
 
 app.factory('createGithubCard', function (createCard) {
-  var GithubCardViewModel = function(title, content, note, classes) {
+  var GithubCardViewModel = function(title, classes) {
     if (!(this instanceof GithubCardViewModel)) {
-      return new GithubCardViewModel(title, content, note, classes);
+      return new GithubCardViewModel(title, classes);
     }
 
     createCard.call(this, title, null, null, ['github-card'].concat(classes));
