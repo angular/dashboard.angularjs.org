@@ -86,10 +86,12 @@ app.controller('BranchStatusController', function BranchStatusController($scope,
   schedule.onceAMinute(function() {
     jenkins.buildStatus('angular.js-angular-master').then(function(buildStatus) {
       masterBuildCard.update(buildStatus.happy, buildStatus.since);
+      $scope.$emit('dash:buildUpdate', 'master', buildStatus);
     });
 
     jenkins.buildStatus('angular.js-angular-v1.0.x').then(function(buildStatus) {
       stableBuildCard.update(buildStatus.happy, buildStatus.since);
+      $scope.$emit('dash:buildUpdate', 'stable/1.0', buildStatus);
     });
 
     github.getSHAsSince('master', 'g3_v1_x').then(function(count) {
