@@ -11,7 +11,7 @@ var markdown = function(string) {
 app.directive('bindMarkdown', function() {
   return function(scope, elm, attr) {
     scope.$watch(attr.bindMarkdown, function(value) {
-      elm.html(markdown(value));
+      elm.html(value ? markdown(value) : '');
     });
   };
 });
