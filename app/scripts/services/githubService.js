@@ -216,3 +216,4 @@ function Github(githubAuth, $http) {
   }
 }
 
+Github.$inject = ['githubAuth', '$http'];

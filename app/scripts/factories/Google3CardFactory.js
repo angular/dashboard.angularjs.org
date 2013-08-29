@@ -1,7 +1,9 @@
 'use strict';
 
 
-app.factory('createGoogle3Card', function (createCard) {
+app.factory('createGoogle3Card', [
+    'createCard',
+    function (createCard) {
   var Google3CardViewModel = function(title, content, note, classes) {
     if (!(this instanceof Google3CardViewModel)) {
       return new Google3CardViewModel(title, content, note, classes);
@@ -23,4 +25,4 @@ app.factory('createGoogle3Card', function (createCard) {
   };
 
   return Google3CardViewModel;
-});
+}]);

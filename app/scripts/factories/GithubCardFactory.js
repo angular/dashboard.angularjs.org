@@ -1,7 +1,9 @@
 'use strict';
 
 
-app.factory('createGithubCard', function (createCard) {
+app.factory('createGithubCard', [
+    'createCard',
+    function (createCard) {
   var GithubCardViewModel = function(title, classes) {
     if (!(this instanceof GithubCardViewModel)) {
       return new GithubCardViewModel(title, classes);
@@ -21,4 +23,4 @@ app.factory('createGithubCard', function (createCard) {
   };
 
   return GithubCardViewModel;
-});
+}]);

@@ -1,7 +1,9 @@
 'use strict';
 
 
-app.factory('createUntriagedCard', function (createCard) {
+app.factory('createUntriagedCard', [
+    'createCard',
+    function (createCard) {
   var UntriagedCardViewModel = function(title, classes) {
     if (!(this instanceof UntriagedCardViewModel)) {
       return new UntriagedCardViewModel(title, classes);
@@ -29,4 +31,4 @@ app.factory('createUntriagedCard', function (createCard) {
   };
 
   return UntriagedCardViewModel;
-});
+}]);

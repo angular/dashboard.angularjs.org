@@ -1,7 +1,9 @@
 'use strict';
 
 
-app.factory('createBuildCard', function (createCard, prettyDateFilter) {
+app.factory('createBuildCard', [
+    'createCard', 'prettyDateFilter',
+    function (createCard, prettyDateFilter) {
   var BuildCardViewModel = function(title, content, note, classes) {
     if (!(this instanceof BuildCardViewModel)) {
       return new BuildCardViewModel(title, content, note, classes);
@@ -25,4 +27,4 @@ app.factory('createBuildCard', function (createCard, prettyDateFilter) {
   };
 
   return BuildCardViewModel;
-});
+}]);

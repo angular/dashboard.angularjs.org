@@ -1,8 +1,13 @@
 'use strict';
 
 
-app.controller('BranchStatusController', function BranchStatusController(
-    $scope, schedule, jenkins, github, createBuildCard, createGoogle3Card, createShaCountCard) {
+app.controller('BranchStatusController', [
+    '$scope', 'schedule', 'jenkins', 'github',
+    'createBuildCard', 'createGoogle3Card', 'createShaCountCard',
+    function BranchStatusController(
+        $scope, schedule, jenkins, github,
+        createBuildCard, createGoogle3Card, createShaCountCard) {
+
   var masterBuildCard = createBuildCard();
   var stableBuildCard = createBuildCard();
   var masterGoogle3Card = createGoogle3Card();
@@ -44,4 +49,4 @@ app.controller('BranchStatusController', function BranchStatusController(
       stableReleaseCard.update(count);
     })
   });
-});
+}]);

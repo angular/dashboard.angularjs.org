@@ -1,7 +1,9 @@
 'use strict';
 
 
-app.factory('createShaCountCard', function (createCard) {
+app.factory('createShaCountCard', [
+    'createCard',
+    function (createCard) {
   var ShaCountCardViewModel = function(title, content, note, classes) {
     if (!(this instanceof ShaCountCardViewModel)) {
       return new ShaCountCardViewModel(title, content, note, classes);
@@ -18,4 +20,4 @@ app.factory('createShaCountCard', function (createCard) {
   };
 
   return ShaCountCardViewModel;
-});
+}]);

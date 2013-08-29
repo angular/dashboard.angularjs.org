@@ -1,8 +1,11 @@
 'use strict';
 
 
-app.controller('GithubStatusController', function GithubStatusController(
-    $scope, schedule, github, createGithubCard, createUntriagedCard) {
+app.controller('GithubStatusController', [
+    '$scope', 'schedule', 'github', 'createGithubCard', 'createUntriagedCard',
+    function GithubStatusController(
+        $scope, schedule, github, createGithubCard, createUntriagedCard) {
+
   var milestonePRsCard = createGithubCard('Pull requests', ['milestone-card', 'pr-card']);
   var milestoneIssuesCard = createGithubCard('Issues', ['milestone-card', 'issue-card']);
   var untriagedPRsCard = createUntriagedCard('Untriaged _Pull requests_', ['untriaged-card', 'pr-card', 'untriaged-pr-card']);
@@ -36,4 +39,4 @@ app.controller('GithubStatusController', function GithubStatusController(
       totalIssuesCard.update(counts.issues);
     });
   });
-});
+}]);
