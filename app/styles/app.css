@@ -528,20 +528,49 @@ body {
 
 
 .notification-active {
-  animation: notification-blink 2s linear infinite;
+  animation: notification-blink 6s linear infinite;
 }
 
 @keyframes notification-blink {
-  0% {
+  /*0% {
     opacity: 0;
   }
-  10% {
+  2% {
+    opacity: 1;
+  }*/
+  0% {
     opacity: 1;
   }
-  40% {
+  12% {
+    opacity: 1;
+  }
+  32% {
     opacity: 0;
   }
   100% {
     opacity: 0;
+  }
+}
+
+
+.notification-active > div {
+  animation: notification-blink-text 6s linear infinite;
+}
+
+@keyframes notification-blink-text {
+  0% {
+    opacity: 1;
+  }
+  12% {
+    opacity: 1;
+  }
+  29% {
+    opacity: 0;
+  }
+  90% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
