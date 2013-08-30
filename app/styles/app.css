@@ -480,14 +480,12 @@ body {
 }
 
 
-
 .notification {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #d70028;
   opacity: 0;
   color: #fff;
   font-size: 80px;
@@ -495,16 +493,31 @@ body {
   text-shadow: rgba(0, 0, 0, .4) 0 -2px 0;
 }
 
+.notification-error {
+  background-color: #d70028;
+}
+
+.notification-error .notification-title span,
+.notification-error .notification-title small,
+.notification-error .notification-note {
+  color: #ff9687;
+}
+
+.notification-success {
+  background-color: #4d7515;
+}
+
+.notification-success .notification-title span,
+.notification-success .notification-title small,
+.notification-success .notification-note {
+  color: #8fb756;
+}
+
+
 .notification-title {
   margin-bottom: 190px;
   padding-top: 120px;
   line-height: 70px;
-}
-
-.notification-title span,
-.notification-title small,
-.notification-note {
-  color: #ff9687;
 }
 
 .notification-title small {
