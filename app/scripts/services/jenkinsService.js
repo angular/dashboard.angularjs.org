@@ -3,18 +3,34 @@
 app.service('jenkins', ['$http', function Jenkins($http) {
 
   this.buildStatus = function(jobName) {
+    var status = {};
 
-    return $http.jsonp('http://ci.angularjs.org/job/' + jobName + '/api/json?jsonp=JSON_CALLBACK').then(function(response) {
-      var happy = (response.data.color === 'blue' || response.data.color === 'blue_anime');
-      var sinceUrl = happy ? response.data.lastFailedBuild.url : response.data.lastSuccessfulBuild.url;
+    var statusUrl = 'http://ci.angularjs.org/job/' + jobName;
+    statusUrl += '/api/json?jsonp=JSON_CALLBACK';
 
+    return $http.jsonp(statusUrl).then(function(statusResponse) {
+      var happy = (statusResponse.data.color === 'blue' || statusResponse.data.color === 'blue_anime');
+      status.happy = happy;
+
+      var sinceUrl = happy ? statusResponse.data.lastFailedBuild.url : statusResponse.data.lastSuccessfulBuild.url;
       sinceUrl += '/api/json?jsonp=JSON_CALLBACK';
 
-      return $http.jsonp(sinceUrl).then(function(response) {
-        return {
-          happy: happy,
-          since: response.data.timestamp
-        };
+      return $http.jsonp(sinceUrl).then(function(sinceResponse) {
+        status.since = sinceResponse.data.timestamp;
+        if (status.happy) return status;
+
+        var authorUrl = statusResponse.data.lastSuccessfulBuild.url;
+        if (!status.happy) {
+          authorUrl = authorUrl.replace(/(\d+)\/$/, function(match, lastSuccessfulBuildId) {
+            return (Number(lastSuccessfulBuildId) + 1) + '/';
+          });
+        }
+        authorUrl += '/api/json?jsonp=JSON_CALLBACK';
+
+        return $http.jsonp(authorUrl).then(function(authorResponse) {
+          status.author = authorResponse.data.culprits[0].fullName;
+          return status;
+        });
       });
     });
   };

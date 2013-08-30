@@ -25,12 +25,12 @@ app.controller('BranchStatusController', [
 
   schedule.onceAMinute(function() {
     jenkins.buildStatus('angular.js-angular-master').then(function(buildStatus) {
-      masterBuildCard.update(buildStatus.happy, buildStatus.since);
+      masterBuildCard.update(buildStatus.happy, buildStatus.since, buildStatus.author);
       $scope.$emit('dash:buildUpdate', 'master', buildStatus);
     });
 
     jenkins.buildStatus('angular.js-angular-v1.0.x').then(function(buildStatus) {
-      stableBuildCard.update(buildStatus.happy, buildStatus.since);
+      stableBuildCard.update(buildStatus.happy, buildStatus.since, buildStatus.author);
       $scope.$emit('dash:buildUpdate', 'stable/1.0', buildStatus);
     });
 

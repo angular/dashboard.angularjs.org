@@ -12,7 +12,8 @@ function MainController($scope, $timeout) {
   $scope.$on('dash:buildUpdate', function (e, branch, buildStatus) {
     if (buildStatus.happy && $scope.brokenBuild && $scope.brokenBuild.branch === branch) {
       $scope.fixedBuild = {
-        branch: branch
+        branch: branch,
+        author: buildStatus.author
       };
       $scope.brokenBuild = null;
 
@@ -24,6 +25,7 @@ function MainController($scope, $timeout) {
     } else if (!buildStatus.happy) {
       $scope.brokenBuild = {
         branch: branch,
+        author: buildStatus.author,
         since: buildStatus.since
       };
       $scope.fixedBuild = null;
