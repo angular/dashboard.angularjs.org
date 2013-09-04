@@ -252,6 +252,7 @@ body {
   border-radius: 3px;
   background-color: #9CC563;
   box-shadow: rgba(0, 0, 0, .2) 0 -2px 0 inset;
+  transition: width 1s ease;
 }
 
 
