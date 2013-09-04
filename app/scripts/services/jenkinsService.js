@@ -28,7 +28,8 @@ app.service('jenkins', ['$http', function Jenkins($http) {
         authorUrl += '/api/json?jsonp=JSON_CALLBACK';
 
         return $http.jsonp(authorUrl).then(function(authorResponse) {
-          status.author = authorResponse.data.culprits[0].fullName;
+          var author = authorResponse.data.culprits[0];
+          status.author = author ? author.fullName : 'Igor Minar';
           return status;
         });
       });
