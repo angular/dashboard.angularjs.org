@@ -1,8 +1,7 @@
-
 body {
   width: 1920px;
   height: 1080px;
-  overflow: hidden;
+  overflow: auto;
   background-color: #252525;
   font-family: 'Track';
   font-size: 20px;
