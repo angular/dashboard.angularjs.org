@@ -588,3 +588,108 @@ body {
     opacity: 1;
   }
 }
+
+@media all and (max-width: 1919px) {
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+    width: 100%;
+  }
+  .github-status,
+  .branch-status {
+    max-width: 100%;
+    width: 50%;
+    float: left;
+  }
+  .card,
+  card {
+    height: auto;
+    max-width: 100%;
+    width: 100%;
+  }
+  .branch {
+    position: inherit;
+    width: 43%;
+    box-sizing: border-box;
+    margin: 1%;
+  }
+  .card-title {
+    padding-top: 20px;
+    line-height: 1;
+    height: auto;
+  }
+  .card-content {
+    padding: 1em;      
+  }
+  .card-note {
+    line-height: 1;
+  }
+  .github-card {
+    width: 44%;
+    margin: 2%;
+    float: left;
+  }
+  .pr-card .card-title, 
+  .issue-card .card-title,
+  .total-card .card-title {
+    max-height: 1em;     
+  }
+  .github-status div.totals
+  .untriaged-card .card-value,
+  .google3-card .card-value, 
+  .sha-count-card .card-value,
+  .card-value {
+     padding: 0;
+     font-size: 4em;
+     line-height: 1;
+  }
+}
+@media all and (max-width: 1152px) {
+  .github-status,
+  .branch-status {
+    width: 100%;
+    max-width: 100%;
+    float: none;
+  }
+  .branch-title {
+    clear: both;
+  }
+}
+@media all and (max-width: 600px) {
+    .github-status { 
+        clear: both; 
+        padding-top: 1em;
+    }
+    .branch-status .card {
+      margin: 10px 30px;   
+    }
+   .untriaged-card .card-title {
+    min-height: 2em;     
+  }
+}
+@media all and (max-width: 480px) {
+    .github-status { 
+        clear: both; 
+        padding-top: 1em;
+    }
+    .branch-status .card {
+      margin: 10px 30px;   
+    }
+   .untriaged-card .card-title {
+    min-height: 2em;     
+  }
+  .branch {
+    float: none;
+    clear: both;
+    width: 98%;
+  }
+  .branch-status .card,
+  .card {
+    width: 96%;
+    margin: 10px 2%;
+    float: none;
+    clear: both;
+    text-align: center;
+  }
+}
