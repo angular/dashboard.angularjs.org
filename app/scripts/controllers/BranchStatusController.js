@@ -34,7 +34,7 @@ app.controller('BranchStatusController', [
       $scope.$emit('dash:buildUpdate', 'stable/1.0', buildStatus);
     });
 
-    github.getSHAsSince('master', 'g3_v1_x').then(function(count) {
+    github.getSHAsSince('master', 'g3_v1_2').then(function(count) {
       masterGoogle3Card.update(count);
     });
     github.getSHAsSince('v1.0.x', 'g3_v1_0').then(function(count) {
