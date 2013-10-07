@@ -9,7 +9,7 @@ angular
     .service('github', Github);
 
 function Github(githubAuth, $http) {
-  var url = 'https://api.github.com/repos/angular/angular.js';
+  var url = 'https://api.github.com/repos/angular/angular.dart';
   var self = this;
 
   this.getTags = function() {

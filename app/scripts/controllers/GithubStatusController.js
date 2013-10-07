@@ -14,7 +14,7 @@ app.controller('GithubStatusController', [
   var totalIssuesCard = createGithubCard('Total _Issues_', ['total-card', 'issue-card', 'total-issue-card']);
 
   $scope.milestone = {
-    title: '1.2.0',
+    title: 'v0.9 Porting Sprint',
     total: 1,
     done: 0,
     cards: [milestonePRsCard, milestoneIssuesCard],
@@ -27,7 +27,7 @@ app.controller('GithubStatusController', [
       untriagedIssuesCard.update(counts.issues);
     });
 
-    github.getCountsForMilestone('1.2.0').then(function(stats) {
+    github.getCountsForMilestone('v0.9 Porting Sprint').then(function(stats) {
       milestonePRsCard.update(
         stats.openPrs, (stats.openPrs !== '?') ? stats.openPrs + stats.closedPrs : '?',
         stats.prHistory
