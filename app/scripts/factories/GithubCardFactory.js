@@ -14,11 +14,14 @@ app.factory('createGithubCard', [
 
   app.inherits(GithubCardViewModel, createCard);
 
-  GithubCardViewModel.prototype.update = function(count, total) {
+  GithubCardViewModel.prototype.update = function(count, total, burnDown) {
     this.content = count;
 
     if (angular.isDefined(total)) {
       this.note = 'out of *' + total + '*';
+    }
+    if (burnDown) {
+      this.burnDown = burnDown;
     }
   };
 

@@ -28,8 +28,13 @@ app.controller('GithubStatusController', [
     });
 
     github.getCountsForMilestone('1.2.0').then(function(stats) {
-      milestonePRsCard.update(stats.openPrs, (stats.openPrs !== '?') ? stats.openPrs + stats.closedPrs : '?');
-      milestoneIssuesCard.update(stats.openIssues, (stats.openIssues !== '?') ? stats.openIssues + stats.closedIssues : '?');
+      milestonePRsCard.update(
+        stats.openPrs, (stats.openPrs !== '?') ? stats.openPrs + stats.closedPrs : '?',
+        stats.prHistory
+      );
+      milestoneIssuesCard.update(
+        stats.openIssues, (stats.openIssues !== '?') ? stats.openIssues + stats.closedIssues : '?',
+        stats.issueHistory);
       $scope.milestone.done = stats.closedPrs + stats.closedIssues;
       $scope.milestone.total = stats.openPrs + stats.closedPrs + stats.openIssues + stats.closedIssues;
     });
