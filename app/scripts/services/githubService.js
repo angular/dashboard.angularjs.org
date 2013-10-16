@@ -154,19 +154,28 @@ function Github(githubAuth, $http) {
   this.getCountsForMilestone = function (title) {
     var needClosed = true;
     var milestoneNumber;
-    var counts = { closedPrs: 0, openPrs: 0, openIssues: 0, closedIssues: 0 };
+    var counts = { closedPrs: 0, openPrs: 0, openIssues: 0, closedIssues: 0, prHistory: [], issueHistory: [] },
+        issueStateWithDay = {
+          prs: [],
+          issues: []
+        };
     var nextPageUrlRegExp = /<([^>]+)>; rel="next"/;
 
     var cacheKey = 'github:getCountsForMilestone:' + title;
 
     var handleResponse = function (response) {
       response.data.forEach(function(item) {
+        var isPr = !!item.pull_request.diff_url;
         if (item.state === 'closed') {
-          counts[item.pull_request.diff_url ? 'closedPrs' : 'closedIssues']++;
+          counts[isPr ? 'closedPrs' : 'closedIssues']++;
         }
         else {
-          counts[item.pull_request.diff_url ? 'openPrs' : 'openIssues']++;
+          counts[isPr ? 'openPrs' : 'openIssues']++;
         }
+        counts[isPr ? 'prHistory' : 'issueHistory'].push({
+          date: new Date(item["created_at"]),
+          state: item.state
+        });
       });
 
       var nextPageUrl = nextPageUrlRegExp.test(response.headers('Link')) &&
@@ -193,7 +202,8 @@ function Github(githubAuth, $http) {
         closedPrs: '?',
         openPrs: '?',
         openIssues: '?',
-        closedIssues: '?'
+        closedIssues: '?',
+        prHistory: [], issueHistory: []
       };
     };
 
