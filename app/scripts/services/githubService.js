@@ -165,17 +165,26 @@ function Github(githubAuth, $http) {
 
     var handleResponse = function (response) {
       response.data.forEach(function(item) {
-        var isPr = !!item.pull_request.diff_url;
+        var isPr = !!item.pull_request.diff_url,
+            countsHistoryArr = counts[isPr ? 'prHistory' : 'issueHistory'];
+
+        var milestoneCreateDate = new Date(item.milestone['created_at']),
+            createDate = new Date(item["created_at"]);
+        countsHistoryArr.push({
+          date: milestoneCreateDate > createDate ? milestoneCreateDate : createDate,
+          state: 'open'
+        });
+
         if (item.state === 'closed') {
           counts[isPr ? 'closedPrs' : 'closedIssues']++;
+          countsHistoryArr.push({
+            date: new Date(item["closed_at"]),
+            state: 'closed'
+          });
         }
         else {
           counts[isPr ? 'openPrs' : 'openIssues']++;
         }
-        counts[isPr ? 'prHistory' : 'issueHistory'].push({
-          date: new Date(item["created_at"]),
-          state: item.state
-        });
       });
 
       var nextPageUrl = nextPageUrlRegExp.test(response.headers('Link')) &&

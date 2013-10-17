@@ -39,18 +39,18 @@ angular.module('dashboardApp').directive('burnDown', function () {
 
       function orderedSum(data) {
         var openCount = 0,
-          closedCount = 0,
+          totalCount = 0,
           result = [];
         data.sort(orderByDate).forEach(function (entry) {
           if (entry.state === "closed") {
-            closedCount++;
+            openCount--;
           } else {
             openCount++;
+            totalCount++;
           }
           result.push({
             open: openCount,
-            closed: closedCount,
-            total: openCount + closedCount,
+            total: totalCount,
             date: entry.date
           });
         });
