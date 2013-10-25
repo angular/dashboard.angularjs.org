@@ -8,19 +8,19 @@ angular.module('dashboardApp').directive('burnDown', function () {
       '<path class="line open"></path>' +
       '</svg>',
     restrict: 'E',
-    replace: true,
     scope: {
       data: '=burnDownModel'
     },
     link: function postLink(scope, element, attrs) {
-      var rect = element[0].getBoundingClientRect();
+      var svgElement = element.children()[0];
+      var rect = svgElement.getBoundingClientRect();
       var width = rect.right - rect.left;
       var height = rect.bottom - rect.top;
       var xScale, yScale;
       var openLine = line(openAccessor);
       var totalLine = line(totalAccessor);
 
-      var chart = d3.select(element[0]);
+      var chart = d3.select(svgElement);
 
       scope.$watch('data', renderChart);
 
@@ -54,7 +54,6 @@ angular.module('dashboardApp').directive('burnDown', function () {
             date: entry.date
           });
         });
-        console.log(result);
         return result;
 
         function orderByDate(a, b) {
