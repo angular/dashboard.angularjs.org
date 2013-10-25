@@ -604,10 +604,10 @@ body {
 
 .bd-chart .line.total {
     stroke: steelblue;
-    stroke-width: 20px;
+    stroke-width: 10px;
 }
 
 .bd-chart .line.open {
     stroke: orangered;
-    stroke-width: 20px;
+    stroke-width: 10px;
 }
