@@ -4,12 +4,12 @@
 app.factory('createGoogle3Card', [
     'createCard',
     function (createCard) {
-  var Google3CardViewModel = function(title, content, note, classes) {
+  var Google3CardViewModel = function(title, content, note, classes, url) {
     if (!(this instanceof Google3CardViewModel)) {
-      return new Google3CardViewModel(title, content, note, classes);
+      return new Google3CardViewModel(title, content, note, classes, url);
     }
 
-    createCard.call(this, '*google*3', null, 'shas behind', ['google3-card']);
+    createCard.call(this, '*google*3', null, 'shas behind', ['google3-card'], url);
   };
 
   app.inherits(Google3CardViewModel, createCard);

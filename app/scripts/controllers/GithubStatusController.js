@@ -1,11 +1,13 @@
 'use strict';
 
+app.controller('GithubStatusController', GithubStatusController);
 
-app.controller('GithubStatusController', [
-    '$scope', 'schedule', 'github', 'createGithubCard', 'createUntriagedCard',
-    function GithubStatusController(
-        $scope, schedule, github, createGithubCard, createUntriagedCard) {
-
+GithubStatusController.$inject = [
+    '$scope', 'schedule', 'config', 'github', 'createGithubCard',
+    'createUntriagedCard'
+  ];
+function GithubStatusController($scope, schedule, config, github,
+                                createGithubCard, createUntriagedCard) {
   var milestonePRsCard = createGithubCard('Pull requests', ['milestone-card', 'pr-card']);
   var milestoneIssuesCard = createGithubCard('Issues', ['milestone-card', 'issue-card']);
   var untriagedPRsCard = createUntriagedCard('Untriaged _Pull requests_', ['untriaged-card', 'pr-card', 'untriaged-pr-card']);
@@ -13,8 +15,9 @@ app.controller('GithubStatusController', [
   var totalPRsCard = createGithubCard('Total _Pull requests_', ['total-card', 'pr-card', 'total-pr-card']);
   var totalIssuesCard = createGithubCard('Total _Issues_', ['total-card', 'issue-card', 'total-issue-card']);
 
+  var milestoneConfig = config.nextMilestone;
   $scope.milestone = {
-    title: '1.2.0',
+    title: milestoneConfig.title,
     total: 1,
     done: 0,
     cards: [milestonePRsCard, milestoneIssuesCard],
@@ -27,7 +30,7 @@ app.controller('GithubStatusController', [
       untriagedIssuesCard.update(counts.issues);
     });
 
-    github.getCountsForMilestone('1.2.0').then(function(stats) {
+    github.getCountsForMilestone(milestoneConfig.githubName).then(function(stats) {
       milestonePRsCard.update(
         stats.openPrs, (stats.openPrs !== '?') ? stats.openPrs + stats.closedPrs : '?',
         stats.prHistory
@@ -44,4 +47,4 @@ app.controller('GithubStatusController', [
       totalIssuesCard.update(counts.issues);
     });
   });
-}]);
+}

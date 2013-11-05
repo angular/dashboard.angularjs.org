@@ -50,7 +50,7 @@ describe('Github Service', function () {
       $httpBackend.when('GET', url + '/compare/' + tag.name + '...' + branch + '?')
         .respond({ ahead_by: 5 });
 
-      github.getSHAsSinceRelease(branch);
+      github.getSHAsSinceRelease(branch, 'v1.2');
       $httpBackend.flush();
 
       expect(JSON.parse(localStorage['github:getSHAsSinceRelease:' + branch])).toBe(5);
