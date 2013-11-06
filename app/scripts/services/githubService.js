@@ -1,15 +1,16 @@
 'use strict';
 
 angular
-    .module('github', [])
+    .module('github', ['config'])
     .value('githubAuth', {
       client_id: localStorage.getItem('github.client_id'),
       client_secret: localStorage.getItem('github.client_secret')
     })
     .service('github', Github);
 
-function Github(githubAuth, $http) {
-  var url = 'https://api.github.com/repos/angular/angular.js';
+Github.$inject = ['githubAuth', '$http', 'config'];
+function Github(githubAuth, $http, config) {
+  var url = 'https://api.github.com/repos/angular/' + config.githubProject;
   var self = this;
 
   this.getTags = function() {
@@ -56,11 +57,7 @@ function Github(githubAuth, $http) {
         });
   };
 
-  this.getSHAsSinceRelease = function(branchName) {
-    var startingWithTag = (branchName == 'master')
-        ? 'v1.2'
-        : branchName.replace(/\.x$/, '');
-
+  this.getSHAsSinceRelease = function(branchName, startingWithTag) {
     var cacheKey = 'github:getSHAsSinceRelease:' + branchName;
 
     return this
@@ -234,5 +231,3 @@ function Github(githubAuth, $http) {
         .then(handleMilestones, handleError);
   }
 }
-
-Github.$inject = ['githubAuth', '$http'];
