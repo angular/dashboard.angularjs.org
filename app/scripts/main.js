@@ -26,12 +26,7 @@ module dartConfig from 'config/dart';
 module jsConfig from 'config/js';
 
 // cards
-module bcf from 'factories/BuildCardFactory';
-module cf from 'factories/CardFactory';
-module g3cf from 'factories/Google3CardFactory';
-module sccf from 'factories/ShaCountCardFactory';
-module gcf from 'factories/GithubCardFactory';
-module ucf from 'factories/UntriagedCardFactory';
+module cards from 'factories/cards';
 
 
 // Convert future DI module (ES6) to the current Angular DI module.
@@ -44,7 +39,7 @@ var modules = [
   mc, bsc, gsc,
   bmd, bdcd, cd, pbd,
   ss, js, gs,
-  bcf, cf, g3cf, sccf, gcf, ucf,
+  cards,
   pdf
 ];
 
