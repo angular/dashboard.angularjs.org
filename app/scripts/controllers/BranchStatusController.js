@@ -1,12 +1,8 @@
-'use strict';
+BranchStatusController.$providerType = 'controller';
+BranchStatusController.$inject = ['$scope', 'schedule', 'config', 'jenkins', 'github',
+    'createBuildCard', 'createGoogle3Card', 'createShaCountCard'];
 
-app.controller('BranchStatusController', BranchStatusController);
-
-BranchStatusController.$inject = [
-    '$scope', 'schedule', 'config', 'jenkins', 'github',
-    'createBuildCard', 'createGoogle3Card', 'createShaCountCard'
-  ];
-function BranchStatusController(
+export function BranchStatusController(
     $scope, schedule, config, jenkins, github,
     createBuildCard, createGoogle3Card, createShaCountCard) {
   var updators = [];
@@ -15,7 +11,7 @@ function BranchStatusController(
       updator();
     });
   });
-  
+
   $scope.branches = [];
   angular.forEach(config.branches, function(branchConfig) {
     var buildCard = createBuildCard();

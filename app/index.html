@@ -2,7 +2,7 @@
 <!--[if lt IE 7]>      <html ng-app="dashboardApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html ng-app="dashboardApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html ng-app="dashboardApp" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html ng-app="dashboardApp" class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -83,32 +83,9 @@
 
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/d3/d3.js"></script>
+    <script src="bower_components/requirejs/require.js" data-main="transpiled/main"></script>
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/services/configService.js"></script>
-        <script src="scripts/services/githubService.js"></script>
-        <script src="scripts/services/scheduleService.js"></script>
-        <script src="scripts/services/jenkinsService.js"></script>
-
-        <script src="scripts/filters/prettyDateFilter.js"></script>
-
-        <script src="scripts/factories/CardFactory.js"></script>
-        <script src="scripts/factories/BuildCardFactory.js"></script>
-        <script src="scripts/factories/Google3CardFactory.js"></script>
-        <script src="scripts/factories/ShaCountCardFactory.js"></script>
-        <script src="scripts/factories/GithubCardFactory.js"></script>
-        <script src="scripts/factories/UntriagedCardFactory.js"></script>
-
-        <script src="scripts/directives/progressBarDirective.js"></script>
-        <script src="scripts/directives/cardDirective.js"></script>
-        <script src="scripts/directives/bindMarkdownDirective.js"></script>
-        <script src="scripts/directives/burnDownChart.js"></script>
-
-        <script src="scripts/controllers/MainController.js"></script>
-        <script src="scripts/controllers/GithubStatusController.js"></script>
-        <script src="scripts/controllers/BranchStatusController.js"></script>
-        <script src="directive/dashGraph.js"></script>
         <!-- endbuild -->
 </body>
 </html>

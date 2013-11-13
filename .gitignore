@@ -4,4 +4,5 @@ dist
 .sass-cache
 .DS_Store
 app/bower_components
+app/transpiled
 .idea

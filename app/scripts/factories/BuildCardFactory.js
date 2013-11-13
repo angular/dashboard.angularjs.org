@@ -1,9 +1,9 @@
-'use strict';
+import {inherits} from '../utils';
 
+createBuildCard.$providerType = 'factory';
+createBuildCard.$inject = ['createCard', 'prettyDateFilter'];
 
-app.factory('createBuildCard', [
-    'createCard', 'prettyDateFilter',
-    function (createCard, prettyDateFilter) {
+export function createBuildCard(createCard, prettyDateFilter) {
   var BuildCardViewModel = function(title, content, note, classes) {
     if (!(this instanceof BuildCardViewModel)) {
       return new BuildCardViewModel(title, content, note, classes);
@@ -12,7 +12,7 @@ app.factory('createBuildCard', [
     createCard.call(this, 'build', null, null, ['build-card']);
   };
 
-  app.inherits(BuildCardViewModel, createCard);
+  inherits(BuildCardViewModel, createCard);
 
   BuildCardViewModel.prototype.update = function(passing, since) {
     if (passing) {
@@ -27,4 +27,4 @@ app.factory('createBuildCard', [
   };
 
   return BuildCardViewModel;
-}]);
+}

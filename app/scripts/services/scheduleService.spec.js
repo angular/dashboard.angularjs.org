@@ -1,9 +1,11 @@
-'use strict';
+module ssm from 'scheduleService';
 
 describe('Service: schedule', function () {
 
   // load the service's module
-  beforeEach(module('dashboardApp'));
+  beforeEach(function() {
+    module(ssm);
+  });
 
   // instantiate service
   var schedule, $timeout;

@@ -7,24 +7,28 @@ module.exports = function(config) {
     basePath: '',
 
     // testing framework to use (jasmine/mocha/qunit/...)
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine', 'requirejs'],
 
     preprocessors: {
-      'app/views/*.html': ['ng-html2js']
+      'app/views/*.html': ['ng-html2js'],
+      'app/scripts/**/*.js': ['es6-transpile']
     },
 
     // list of files / patterns to load in the browser
     files: [
       'app/bower_components/angular/angular.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
-      'app/scripts/app.js',
-      'app/scripts/**/*.js',
+      // 'app/scripts/app.js',
+      {pattern: 'app/scripts/**/*.js', included: false},
       'app/views/*.html',
-      'test/spec/*/*.js'
+      'test/main.js'
+      // 'test/spec/*/*.js'
     ],
 
     // list of files / patterns to exclude
-    exclude: [],
+    exclude: [
+      'app/main.js'
+    ],
 
     // web server port
     port: 8008,
@@ -56,6 +60,17 @@ module.exports = function(config) {
     ngHtml2JsPreprocessor: {
       moduleName: 'dashboardApp',
       stripPrefix: 'app/'
-    }
+    },
+
+    // TODO(vojta): refactor this into a plugin
+    plugins: ['karma-jasmine', 'karma-requirejs', 'karma-chrome-launcher', 'karma-ng-html2js-preprocessor', {
+      'preprocessor:es6-transpile': ['factory', function(/* config.basePath */ basePath) {
+        var Compiler = require('es6-module-transpiler').Compiler;
+        return function(content, file, done) {
+          var compiler = new Compiler(content, null);
+          done(compiler.toAMD());
+        };
+      }]
+    }]
   });
 };

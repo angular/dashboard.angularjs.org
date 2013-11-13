@@ -1,13 +1,12 @@
-'use strict';
+// TODO(vojta): this will become annotation
+// @controllerProvider
+// @inject(...)
+GithubStatusController.$providerType = 'controller';
+GithubStatusController.$inject = ['$scope', 'schedule', 'config', 'github', 'createGithubCard',
+    'createUntriagedCard'];
 
-app.controller('GithubStatusController', GithubStatusController);
-
-GithubStatusController.$inject = [
-    '$scope', 'schedule', 'config', 'github', 'createGithubCard',
-    'createUntriagedCard'
-  ];
-function GithubStatusController($scope, schedule, config, github,
-                                createGithubCard, createUntriagedCard) {
+export function GithubStatusController($scope, schedule, config, github,
+    createGithubCard, createUntriagedCard) {
   var milestonePRsCard = createGithubCard('Pull requests', ['milestone-card', 'pr-card']);
   var milestoneIssuesCard = createGithubCard('Issues', ['milestone-card', 'issue-card']);
   var untriagedPRsCard = createUntriagedCard('Untriaged _Pull requests_', ['untriaged-card', 'pr-card', 'untriaged-pr-card']);

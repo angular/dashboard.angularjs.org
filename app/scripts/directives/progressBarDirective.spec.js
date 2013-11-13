@@ -1,8 +1,9 @@
-'use strict';
+module pbd from 'progressBarDirective';
 
 describe('directive: progressBar', function () {
   beforeEach(function() {
-    module('dashboardApp');
+    // the string module is to load the templates
+    module(pbd, 'dashboardApp');
     module(function($exceptionHandlerProvider) {
       $exceptionHandlerProvider.mode('log');
     });

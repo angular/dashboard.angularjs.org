@@ -1,7 +1,4 @@
-'use strict';
-
-
-app.directive('card', function() {
+var card = function() {
   return {
     restrict: 'E',
     templateUrl: 'views/card.html',
@@ -9,4 +6,8 @@ app.directive('card', function() {
       'data': '=cardData'
     }
   };
-});
+};
+
+card.$providerType = 'directive';
+
+export {card};

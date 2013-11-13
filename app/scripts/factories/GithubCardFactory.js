@@ -1,9 +1,9 @@
-'use strict';
+import {inherits} from '../utils';
 
+createGithubCard.$providerType = 'factory';
+createGithubCard.$inject = ['createCard'];
 
-app.factory('createGithubCard', [
-    'createCard',
-    function (createCard) {
+export function createGithubCard(createCard) {
   var GithubCardViewModel = function(title, classes) {
     if (!(this instanceof GithubCardViewModel)) {
       return new GithubCardViewModel(title, classes);
@@ -12,7 +12,7 @@ app.factory('createGithubCard', [
     createCard.call(this, title, null, null, ['github-card'].concat(classes));
   };
 
-  app.inherits(GithubCardViewModel, createCard);
+  inherits(GithubCardViewModel, createCard);
 
   GithubCardViewModel.prototype.update = function(count, total, burnDown) {
     this.content = count;
@@ -26,4 +26,4 @@ app.factory('createGithubCard', [
   };
 
   return GithubCardViewModel;
-}]);
+}

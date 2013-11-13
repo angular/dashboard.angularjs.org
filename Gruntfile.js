@@ -28,7 +28,24 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     yeoman: yeomanConfig,
+
+    transpile: {
+      dashboard: {
+        type: 'amd', // or 'cjs'
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>/scripts/',
+          dest: '<%= yeoman.app %>/transpiled/',
+          src: ['**/*.js'],
+        }]
+      }
+    },
+
     watch: {
+      transpile: {
+        files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+        tasks: ['transpile']
+      },
       coffee: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee'],
         tasks: ['coffee:dist']

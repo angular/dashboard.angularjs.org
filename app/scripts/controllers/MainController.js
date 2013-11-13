@@ -1,9 +1,7 @@
-'use strict';
+MainController.$providerType = 'controller';
+MainController.$inject = ['$scope', '$timeout'];
 
-
-app.controller('MainController', MainController);
-
-function MainController($scope, $timeout) {
+export function MainController($scope, $timeout) {
   $scope.brokenBuild = null;
   $scope.fixedBuild = null;
 
@@ -36,5 +34,3 @@ function MainController($scope, $timeout) {
     }
   });
 }
-
-MainController.$inject = ['$scope', '$timeout'];
