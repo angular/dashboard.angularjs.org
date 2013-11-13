@@ -1,9 +1,9 @@
-'use strict';
+import {inherits} from '../utils';
 
+createShaCountCard.$inject = ['createCard'];
+createShaCountCard.$providerType = 'factory';
 
-app.factory('createShaCountCard', [
-    'createCard',
-    function (createCard) {
+export function createShaCountCard(createCard) {
   var ShaCountCardViewModel = function(title, content, note, classes) {
     if (!(this instanceof ShaCountCardViewModel)) {
       return new ShaCountCardViewModel(title, content, note, classes);
@@ -13,11 +13,11 @@ app.factory('createShaCountCard', [
         ['sha-count-card']);
   };
 
-  app.inherits(ShaCountCardViewModel, createCard);
+  inherits(ShaCountCardViewModel, createCard);
 
   ShaCountCardViewModel.prototype.update = function(count) {
     this.content = count;
   };
 
   return ShaCountCardViewModel;
-}]);
+}

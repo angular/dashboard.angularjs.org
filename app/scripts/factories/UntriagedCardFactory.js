@@ -1,9 +1,9 @@
-'use strict';
+import {inherits} from '../utils';
 
+createUntriagedCard.$inject = ['createCard'];
+createUntriagedCard.$providerType = 'factory';
 
-app.factory('createUntriagedCard', [
-    'createCard',
-    function (createCard) {
+export function createUntriagedCard(createCard) {
   var UntriagedCardViewModel = function(title, classes) {
     if (!(this instanceof UntriagedCardViewModel)) {
       return new UntriagedCardViewModel(title, classes);
@@ -13,7 +13,7 @@ app.factory('createUntriagedCard', [
         ['github-card', 'untriaged-card-none'].concat(classes));
   };
 
-  app.inherits(UntriagedCardViewModel, createCard);
+  inherits(UntriagedCardViewModel, createCard);
 
   UntriagedCardViewModel.prototype.update = function (count) {
     this.content = count;
@@ -31,4 +31,4 @@ app.factory('createUntriagedCard', [
   };
 
   return UntriagedCardViewModel;
-}]);
+}

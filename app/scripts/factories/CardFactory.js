@@ -1,7 +1,7 @@
-'use strict';
+createCard.$inject = [];
+createCard.$providerType = 'factory';
 
-
-app.factory('createCard', function () {
+export function createCard() {
   var CardViewModel = function(title, content, note, classes, url) {
     if (!(this instanceof CardViewModel)) {
       return new CardViewModel(title, content, note, classes, url);
@@ -15,4 +15,4 @@ app.factory('createCard', function () {
   };
 
   return CardViewModel;
-});
+}

@@ -1,7 +1,4 @@
-'use strict';
-
-angular.module('dashboardApp').directive('burnDown', function () {
-
+var burnDown = function() {
   return {
     template: '<svg class="bd-chart">' +
       '<path class="line total"></path>' +
@@ -98,4 +95,8 @@ angular.module('dashboardApp').directive('burnDown', function () {
       }
     }
   };
-});
+};
+
+burnDown.$providerType = 'directive';
+
+export {burnDown};

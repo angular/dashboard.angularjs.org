@@ -1,14 +1,7 @@
-'use strict';
-
-angular
-    .module('github', ['config'])
-    .value('githubAuth', {
-      client_id: localStorage.getItem('github.client_id'),
-      client_secret: localStorage.getItem('github.client_secret')
-    })
-    .service('github', Github);
-
+Github.$providerType = 'service';
 Github.$inject = ['githubAuth', '$http', 'config'];
+Github.$name = 'github';
+
 function Github(githubAuth, $http, config) {
   var url = 'https://api.github.com/repos/angular/' + config.githubProject;
   var self = this;
@@ -231,3 +224,12 @@ function Github(githubAuth, $http, config) {
         .then(handleMilestones, handleError);
   }
 }
+
+var githubAuth = {
+  client_id: localStorage.getItem('github.client_id'),
+  client_secret: localStorage.getItem('github.client_secret')
+};
+
+githubAuth.$providerType = 'value';
+
+export {githubAuth, Github};

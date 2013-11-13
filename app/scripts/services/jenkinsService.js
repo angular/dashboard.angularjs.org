@@ -1,6 +1,8 @@
-'use strict';
+Jenkins.$providerType = 'service';
+Jenkins.$inject = ['$http'];
+Jenkins.$name = 'jenkins';
 
-app.service('jenkins', ['$http', function Jenkins($http) {
+function Jenkins($http) {
 
   this.buildStatus = function(jobName) {
     var status = {};
@@ -35,4 +37,6 @@ app.service('jenkins', ['$http', function Jenkins($http) {
       });
     });
   };
-}]);
+}
+
+export {Jenkins};

@@ -1,9 +1,7 @@
-'use strict';
-
 // TODO(chirayu):
 // - Include bootstrap css
 
-app.directive('progressBar', function() {
+var progressBar = function() {
   return {
     restrict: 'E',
     templateUrl: 'views/progressBar.html',
@@ -23,5 +21,8 @@ app.directive('progressBar', function() {
       };
     }
   };
-});
+};
 
+progressBar.$providerType = 'directive';
+
+export {progressBar};

@@ -1,9 +1,9 @@
-'use strict';
+import {inherits} from '../utils';
 
+createGoogle3Card.$inject = ['createCard'];
+createGoogle3Card.$providerType = 'factory';
 
-app.factory('createGoogle3Card', [
-    'createCard',
-    function (createCard) {
+export function createGoogle3Card(createCard) {
   var Google3CardViewModel = function(title, content, note, classes, url) {
     if (!(this instanceof Google3CardViewModel)) {
       return new Google3CardViewModel(title, content, note, classes, url);
@@ -12,7 +12,7 @@ app.factory('createGoogle3Card', [
     createCard.call(this, '*google*3', null, 'shas behind', ['google3-card'], url);
   };
 
-  app.inherits(Google3CardViewModel, createCard);
+  inherits(Google3CardViewModel, createCard);
 
   Google3CardViewModel.prototype.update = function(count) {
     this.content = count;
@@ -25,4 +25,4 @@ app.factory('createGoogle3Card', [
   };
 
   return Google3CardViewModel;
-}]);
+}
