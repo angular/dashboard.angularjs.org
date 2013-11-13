@@ -22,6 +22,7 @@
     "grunt-rev": "~0.1.0",
     "grunt-open": "~0.2.0",
     "grunt-concurrent": "~0.3.0",
+    "grunt-es6-module-transpiler": "~0.5.1",
     "load-grunt-tasks": "~0.1.0",
     "connect-livereload": "~0.2.0",
     "grunt-google-cdn": "~0.2.0",
