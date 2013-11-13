@@ -1,4 +1,4 @@
-'use strict';
+module gsm from 'githubService';
 
 describe('github', function() {
   function gitUrl(url) {
@@ -6,10 +6,15 @@ describe('github', function() {
         '?client_id=ID&client_secret=SECRET';
   }
 
-  beforeEach(module('github'));
-  beforeEach(module(function($provide) {
-    $provide.value('githubAuth', { client_id: 'ID', client_secret: 'SECRET' });
-  }));
+  beforeEach(function() {
+    module(gsm);
+
+    module(function($provide) {
+      $provide.value('githubAuth', { client_id: 'ID', client_secret: 'SECRET' });
+      $provide.value('config', {githubProject: 'angular.js'});
+    })
+  });
+
 
   it('should return a list of tags', inject(function(github, $rootScope, $httpBackend) {
     $httpBackend.expectGET(gitUrl('/tags')).respond([
