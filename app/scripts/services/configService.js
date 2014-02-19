@@ -27,8 +27,8 @@ var angularJsConfig = {
 var angularDartConfig = {
   githubProject: 'angular.dart',
   nextMilestone: {
-    title: 'v0.9.8',
-    githubName:  'v0.9.8'
+    title: 'v0.9.9',
+    githubName:  'v0.9.9'
   },
   branches: {
     master: {
