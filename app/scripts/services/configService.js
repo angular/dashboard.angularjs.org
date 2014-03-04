@@ -3,8 +3,8 @@
 var angularJsConfig = {
   githubProject: 'angular.js',
   nextMilestone: {
-    title: 'v1.2.14',
-    githubName:  '1.2.14'
+    title: 'v1.3.0-beta.1',
+    githubName:  'v1.3.0-beta.1'
   },
   branches: {
     master: {
