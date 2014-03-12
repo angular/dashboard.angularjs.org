@@ -82,10 +82,10 @@ function Github(githubAuth, $http, config) {
 
     var handleResponse = function (response) {
       response.data.forEach(function(item) {
-        if (item.pull_request.diff_url === null) {
-          counts.issues++;
-        } else {
+        if (isGhIssueAPr(item)) {
           counts.prs++;
+        } else {
+          counts.issues++;
         }
       });
 
@@ -119,10 +119,10 @@ function Github(githubAuth, $http, config) {
 
     var handleResponse = function (response) {
       response.data.forEach(function(item) {
-        if (item.pull_request.diff_url === null) {
-          counts.issues++;
-        } else {
+        if (isGhIssueAPr(item)) {
           counts.prs++;
+        } else {
+          counts.issues++;
         }
       });
 
@@ -162,7 +162,7 @@ function Github(githubAuth, $http, config) {
 
     var handleResponse = function (response) {
       response.data.forEach(function(item) {
-        var isPr = !!item.pull_request.diff_url,
+        var isPr = !!isGhIssueAPr(item),
             countsHistoryArr = counts[isPr ? 'prHistory' : 'issueHistory'];
 
         var milestoneCreateDate = new Date(item.milestone['created_at']),
@@ -229,5 +229,9 @@ function Github(githubAuth, $http, config) {
     return $http
         .get(url + '/milestones', {params: githubAuth})
         .then(handleMilestones, handleError);
+  }
+
+  function isGhIssueAPr(item) {
+    return item.pull_request && item.pull_request.diff_url;
   }
 }
