@@ -52,6 +52,12 @@ describe('Service: jenkins', function() {
         timestamp: 2222
       });
 
+      $httpBackend.expectJSONP('/fake/last/happy/build/api/json?jsonp=JSON_CALLBACK').respond({
+        culprits: [{
+          fullName: 'some user'
+        }]
+      });
+
       jenkins.buildStatus('fancyApp').then(function(_status_) {
         status = _status_;
       });
@@ -60,7 +66,7 @@ describe('Service: jenkins', function() {
 
       $httpBackend.flush();
 
-      expect(status).toEqual({happy: false, since: 2222});
+      expect(status).toEqual({happy: false, since: 2222, author: 'some user'});
     });
 
   });

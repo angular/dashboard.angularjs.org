@@ -164,8 +164,7 @@ function Github(githubAuth, $http, config) {
       response.data.forEach(function(item) {
         var isPr = !!isGhIssueAPr(item),
             countsHistoryArr = counts[isPr ? 'prHistory' : 'issueHistory'];
-
-        var milestoneCreateDate = new Date(item.milestone['created_at']),
+        var milestoneCreateDate = item.milestone ? new Date(item.milestone['created_at']) : null,
             createDate = new Date(item["created_at"]);
         countsHistoryArr.push({
           date: milestoneCreateDate > createDate ? milestoneCreateDate : createDate,
