@@ -6,30 +6,36 @@ describe('Service: travis', function() {
   beforeEach(module('dashboardApp'));
 
   // instantiate service
-  var travis, $httpBackend, date, dateStr;
+  var travis, $httpBackend, date, dateStr, someUser, branchName, initStatus;
 
   beforeEach(inject(function (_travis_, _$httpBackend_) {
     travis = _travis_;
     $httpBackend = _$httpBackend_;
-    date = new Date(2222);
-    dateStr = date.toISOString();
+    someUser = 'some user';
+    branchName = 'fancyApp';
+    initStatus = travis.previousData(branchName);
   }));
+
+  function mockBackend(state, dateInMillis) {
+    var date = new Date(dateInMillis || 0);
+    var dateStr = date.toISOString();
+    $httpBackend.expectGET('https://api.travis-ci.org/repos/angular/angular.js/branches/'+branchName).respond({
+      branch: {
+        'state': state,
+        'finished_at': dateStr
+      },
+      commit: {
+        'committer_name': someUser
+      }
+    });
+  }
 
 
   describe('buildStatus', function () {
 
     it('should return a promise for status of happy build', function () {
       var status;
-
-      $httpBackend.expectGET('https://api.travis-ci.org/repos/angular/angular.js/branches/fancyApp').respond({
-        branch: {
-          'state': 'passed',
-          'finished_at': dateStr
-        },
-        commit: {
-          'committer_name': 'some user'
-        }
-      });
+      mockBackend('passed');
 
       travis.buildStatus('fancyApp').then(function(_status_) {
         status = _status_;
@@ -39,22 +45,13 @@ describe('Service: travis', function() {
 
       $httpBackend.flush();
 
-      expect(status).toEqual({happy: true, since: 2222, author: 'some user'});
+      expect(status).toEqual({happy: true, since: initStatus.lastFail, author: someUser});
     });
 
-
-    it('should return a promise for status of sad build', function() {
+    it('should return a promise for status of sad build', function () {
       var status;
-
-      $httpBackend.expectGET('https://api.travis-ci.org/repos/angular/angular.js/branches/fancyApp').respond({
-        branch: {
-          'state': 'failed',
-          'finished_at': dateStr
-        },
-        commit: {
-          'committer_name': 'some user'
-        }
-      });
+      var initStatus = travis.previousData(branchName);
+      mockBackend('failed');
 
       travis.buildStatus('fancyApp').then(function(_status_) {
         status = _status_;
@@ -64,46 +61,29 @@ describe('Service: travis', function() {
 
       $httpBackend.flush();
 
-      expect(status).toEqual({happy: false, since: 2222, author: 'some user'});
+      expect(status).toEqual({happy: false, since: initStatus.lastSuccess, author: someUser});
     });
 
     it('should return the last state if the current build is in progress', function () {
       var status;
-
-      $httpBackend.expectGET('https://api.travis-ci.org/repos/angular/angular.js/branches/fancyApp').respond({
-        branch: {
-          'state': 'started'
-        },
-        commit: { 'committer_name': 'some user' }
-      });
+      mockBackend('started');
       travis.buildStatus('fancyApp').then(function(_status_) {
         status = _status_;
       });
       $httpBackend.flush();
 
       // initially we assume a good build
-      expect(status).toEqual({happy: true, since: undefined, author: 'some user'});
+      expect(status).toEqual({happy: true, since: initStatus.lastFail, author: undefined});
 
-      $httpBackend.expectGET('https://api.travis-ci.org/repos/angular/angular.js/branches/fancyApp').respond({
-        branch: {
-          'state': 'failed',
-          'finished_at': dateStr
-        },
-        commit: { 'committer_name': 'some user' }
-      });
+      mockBackend('failed');
       travis.buildStatus('fancyApp').then(function(_status_) {
         status = _status_;
       });
       $httpBackend.flush();
 
-      expect(status).toEqual({happy: false, since: 2222, author: 'some user'});
+      expect(status).toEqual({happy: false, since: initStatus.lastSuccess, author: 'some user'});
 
-      $httpBackend.expectGET('https://api.travis-ci.org/repos/angular/angular.js/branches/fancyApp').respond({
-        branch: {
-          'state': 'started'
-        },
-        commit: { 'committer_name': 'some user' }
-      });
+      mockBackend('started');
       var newStatus;
       travis.buildStatus('fancyApp').then(function(_status_) {
         newStatus = _status_;
@@ -112,6 +92,44 @@ describe('Service: travis', function() {
 
       expect(newStatus).toBe(status);
 
+    });
+
+    it('should return the time of the last sad build for happy builds', function () {
+      var status;
+      mockBackend('failed', 1111);
+      travis.buildStatus('fancyApp').then(function(_status_) {
+        status = _status_;
+      });
+      $httpBackend.flush();
+
+      expect(status).toEqual({happy: false, since: initStatus.lastSuccess, author: someUser});
+
+      mockBackend('passed');
+      travis.buildStatus('fancyApp').then(function(_status_) {
+        status = _status_;
+      });
+      $httpBackend.flush();
+
+      expect(status).toEqual({happy: true, since: 1111, author: 'some user'});
+    });
+
+    it('should return the time of the last happy build for sad builds', function () {
+      var status;
+      mockBackend('passed', 1111);
+      travis.buildStatus('fancyApp').then(function(_status_) {
+        status = _status_;
+      });
+      $httpBackend.flush();
+
+      expect(status).toEqual({happy: true, since: initStatus.lastFail, author: someUser});
+
+      mockBackend('failed');
+      travis.buildStatus('fancyApp').then(function(_status_) {
+        status = _status_;
+      });
+      $httpBackend.flush();
+
+      expect(status).toEqual({happy: false, since: 1111, author: 'some user'});
     });
   });
 });
