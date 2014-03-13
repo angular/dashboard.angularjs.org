@@ -3,11 +3,11 @@
 app.controller('BranchStatusController', BranchStatusController);
 
 BranchStatusController.$inject = [
-    '$scope', 'schedule', 'config', 'jenkins', 'github',
+    '$scope', 'schedule', 'config', 'travis', 'github',
     'createBuildCard', 'createGoogle3Card', 'createShaCountCard'
   ];
 function BranchStatusController(
-    $scope, schedule, config, jenkins, github,
+    $scope, schedule, config, travis, github,
     createBuildCard, createGoogle3Card, createShaCountCard) {
   var updators = [];
   schedule.onceAMinute(function() {
@@ -26,7 +26,7 @@ function BranchStatusController(
       .replace('GHNAME', branchConfig.name);
     var cards = [buildCard, g3Card];
     updators.push(function() {
-      jenkins.buildStatus(branchConfig.jenkinsProjectId).then(function(buildStatus) {
+      travis.buildStatus(branchConfig.name).then(function(buildStatus) {
         buildCard.update(buildStatus.happy, buildStatus.since, buildStatus.author);
         $scope.$emit('dash:buildUpdate', branchConfig.title, buildStatus);
       });
