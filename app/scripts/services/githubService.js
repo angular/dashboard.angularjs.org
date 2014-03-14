@@ -148,17 +148,19 @@ function Github(githubAuth, $http, config) {
   };
 
 
-  this.getCountsForMilestone = function (title) {
+  this.getCountsForLatestMilestone = function () {
     var needClosed = true;
     var milestoneNumber;
-    var counts = { closedPrs: 0, openPrs: 0, openIssues: 0, closedIssues: 0, prHistory: [], issueHistory: [] },
+    var counts = {
+          closedPrs: 0, openPrs: 0, openIssues: 0, closedIssues: 0, prHistory: [], issueHistory: [], milestone: {}
+        },
         issueStateWithDay = {
           prs: [],
           issues: []
         };
     var nextPageUrlRegExp = /<([^>]+)>; rel="next"/;
 
-    var cacheKey = 'github:getCountsForMilestone:' + title;
+    var cacheKey = 'github:getCountsForLatestMilestone';
 
     var handleResponse = function (response) {
       response.data.forEach(function(item) {
@@ -208,17 +210,22 @@ function Github(githubAuth, $http, config) {
         openPrs: '?',
         openIssues: '?',
         closedIssues: '?',
+        milestone: {
+          number: '?',
+          title: '?'
+        },
         prHistory: [], issueHistory: []
       };
     };
 
 
     var handleMilestones = function (response) {
-      response.data.forEach(function (milestone) {
-        if (milestone.title === title) {
-          milestoneNumber = milestone.number;
-        }
-      });
+      var milestone = response.data[0];
+      if (!milestone) {
+        return handleError();
+      }
+      milestoneNumber = milestone.number;
+      counts.milestone = milestone;
 
       return $http
           .get(url + '/issues?state=open&milestone=' + milestoneNumber, {params: githubAuth})
@@ -226,9 +233,9 @@ function Github(githubAuth, $http, config) {
     };
 
     return $http
-        .get(url + '/milestones', {params: githubAuth})
+        .get(url + '/milestones?state=open&sort=due_date&direction=desc', {params: githubAuth})
         .then(handleMilestones, handleError);
-  }
+  };
 
   function isGhIssueAPr(item) {
     return item.pull_request && item.pull_request.diff_url;

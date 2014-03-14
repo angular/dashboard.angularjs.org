@@ -2,10 +2,6 @@
 
 var angularJsConfig = {
   githubProject: 'angular.js',
-  nextMilestone: {
-    title: 'v1.3.0-beta.2',
-    githubName:  '1.3.0-beta.2'
-  },
   branches: {
     master: {
       title: 'master',
@@ -26,10 +22,6 @@ var angularJsConfig = {
 
 var angularDartConfig = {
   githubProject: 'angular.dart',
-  nextMilestone: {
-    title: 'v0.9.10',
-    githubName:  'v0.9.10'
-  },
   branches: {
     master: {
       title: 'master',

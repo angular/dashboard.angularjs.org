@@ -135,19 +135,19 @@ describe('Github Service', function () {
         { state: 'closed', pull_request: { diff_url: 'http://e' }, 'closed_at': closedDate, 'created_at': openDate}
       ];
 
-      $httpBackend.when('GET', url + '/milestones?')
+      $httpBackend.when('GET', url + '/milestones?state=open&sort=due_date&direction=desc&')
         .respond([ milestone ]);
       $httpBackend.when('GET', url + '/issues?state=open&milestone=' + milestone.number + '&')
         .respond(open_issues);
       $httpBackend.when('GET', url + '/issues?state=closed&milestone=' + milestone.number + '&')
         .respond(closed_issues);
 
-      github.getCountsForMilestone(milestone.title);
+      github.getCountsForLatestMilestone();
       $httpBackend.flush();
 
       var openDateStr = openDate.toISOString(),
         closedDateStr = closedDate.toISOString();
-      expect(JSON.parse(localStorage['github:getCountsForMilestone:' + milestone.title])).toEqual(
+      expect(JSON.parse(localStorage['github:getCountsForLatestMilestone'])).toEqual(
         { closedPrs: 2, openPrs: 3, openIssues: 2, closedIssues: 1, prHistory: [
           { date: openDateStr, state: 'open' },
           { date: openDateStr, state: 'open' },
@@ -161,7 +161,9 @@ describe('Github Service', function () {
           { date: openDateStr, state: 'open' },
           { date: openDateStr, state: 'open' },
           { date: closedDateStr, state: 'closed' }
-        ] }
+        ], milestone: milestone
+
+        }
 
       );
     }));
