@@ -27,7 +27,7 @@ var angularDartConfig = {
       title: 'master',
       name: 'master',
       g3Name: 'g3v1x-master',
-      releaseTag: 'v0.14.0',
+      releaseTag: 'v1.0.0',
       jenkinsProjectId: 'angular.dart-master'
     }
   }
