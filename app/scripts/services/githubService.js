@@ -1,243 +1,207 @@
 'use strict';
 
-angular
-    .module('github', ['config'])
-    .value('githubAuth', {
-      client_id: localStorage.getItem('github.client_id'),
-      client_secret: localStorage.getItem('github.client_secret')
-    })
-    .service('github', Github);
+/* jshint camelcase: false */
 
-Github.$inject = ['githubAuth', '$http', 'config'];
-function Github(githubAuth, $http, config) {
-  var url = 'https://api.github.com/repos/angular/' + config.githubProject;
-  var self = this;
+angular.module('github', ['config'])
 
-  this.getTags = function() {
-    var cacheKey = 'github:getTags';
-
-    return $http
-        .get(url + '/tags', {
-          params: githubAuth
-        })
-        .then(function(response) {
-          localStorage[cacheKey] = JSON.stringify(response.data);
-          return response.data;
-        }, function() {
-          var cacheValue = localStorage[cacheKey];
-          return cacheValue ? JSON.parse(cacheValue) : [];
-        });
-  };
-
-  this.getLatestTagStartingWith = function(startingWith) {
-    return this.getTags().then(function(tags) {
-      for (var i = 0, ii = tags.length; i < ii; i++) {
-        var tag = tags[i];
-        if (tag.name.indexOf(startingWith) == 0) {
-          return tag.name;
-        }
-      }
-      return null;
-    });
-  };
-
-  this.getSHAsSince = function(branchName, sinceTag) {
-    var cacheKey = 'github:getSHAsSince:' + branchName + ':' + sinceTag;
-
-    return $http
-        .get(url + '/compare/' + sinceTag + '...' + branchName, {
-          params: githubAuth
-        })
-        .then(function(response) {
-          localStorage[cacheKey] = response.data.ahead_by;
-          return response.data.ahead_by;
-        }, function() {
-          var cacheValue = localStorage[cacheKey];
-          return cacheValue ? Number(cacheValue) : '?';
-        });
-  };
-
-  this.getSHAsSinceRelease = function(branchName, startingWithTag) {
-    var cacheKey = 'github:getSHAsSinceRelease:' + branchName;
-
-    return this
-        .getLatestTagStartingWith(startingWithTag)
-        .then(function(latestTag) {
-          return self.getSHAsSince(branchName, latestTag).then(function(shas) {
-            localStorage[cacheKey] = shas;
-            return shas;
-          });
-        }, function() {
-          var cacheValue = localStorage[cacheKey];
-          return cacheValue ? Number(cacheValue) : '?';
-        });
-  }
+.value('githubAuth', {
+  client_id: localStorage.getItem('github.client_id'),
+  client_secret: localStorage.getItem('github.client_secret')
+})
 
 
-  this.getUntriagedCounts = function() {
-    var counts = {issues: 0, prs: 0};
-    var nextPageUrlRegExp = /<([^>]+)>; rel="next"/;
-
-    var cacheKey = 'github:getUntriagedCounts';
-
-    var handleResponse = function (response) {
-      response.data.forEach(function(item) {
-        if (isGhIssueAPr(item)) {
-          counts.prs++;
-        } else {
-          counts.issues++;
-        }
-      });
-
-      var nextPageUrl = nextPageUrlRegExp.test(response.headers('Link')) &&
-                          nextPageUrlRegExp.exec(response.headers('Link'))[1];
-
-      if (nextPageUrl) {
-        return $http.get(nextPageUrl).then(handleResponse);
-      }
-
-      localStorage[cacheKey] = JSON.stringify(counts);
-      return counts;
-    };
-
-    var handleError = function () {
-      var cacheValue = localStorage[cacheKey];
-      return cacheValue ? JSON.parse(cacheValue) : {issues: '?', prs: '?'};
-    };
-
-    return $http
-        .get(url + '/issues?state=open&milestone=none', {params: githubAuth})
-        .then(handleResponse, handleError);
-  };
-
-
-  this.getAllOpenCounts = function() {
-    var counts = {issues: 0, prs: 0};
-    var nextPageUrlRegExp = /<([^>]+)>; rel="next"/;
-
-    var cacheKey = 'github:getAllOpenCounts';
-
-    var handleResponse = function (response) {
-      response.data.forEach(function(item) {
-        if (isGhIssueAPr(item)) {
-          counts.prs++;
-        } else {
-          counts.issues++;
-        }
-      });
-
-      var nextPageUrl = nextPageUrlRegExp.test(response.headers('Link')) &&
-                          nextPageUrlRegExp.exec(response.headers('Link'))[1];
-
-      if (nextPageUrl) {
-        return $http.get(nextPageUrl).then(handleResponse);
-      }
-
-      localStorage[cacheKey] = JSON.stringify(counts);
-      return counts;
-    };
-
-    var handleError = function () {
-      var cacheValue = localStorage[cacheKey];
-      return cacheValue ? JSON.parse(cacheValue) : {issues: '?', prs: '?'};
-    };
-
-    return $http
-        .get(url + '/issues?state=open', {params: githubAuth})
-        .then(handleResponse, handleError);
-  };
-
-
-  this.getCountsForLatestMilestone = function () {
-    var needClosed = true;
-    var milestoneNumber;
-    var counts = {
-          closedPrs: 0, openPrs: 0, openIssues: 0, closedIssues: 0, prHistory: [], issueHistory: [], milestone: {}
-        },
-        issueStateWithDay = {
-          prs: [],
-          issues: []
-        };
-    var nextPageUrlRegExp = /<([^>]+)>; rel="next"/;
-
-    var cacheKey = 'github:getCountsForLatestMilestone';
-
-    var handleResponse = function (response) {
-      response.data.forEach(function(item) {
-        var isPr = !!isGhIssueAPr(item),
-            countsHistoryArr = counts[isPr ? 'prHistory' : 'issueHistory'];
-        var milestoneCreateDate = item.milestone ? new Date(item.milestone['created_at']) : null,
-            createDate = new Date(item["created_at"]);
-        countsHistoryArr.push({
-          date: milestoneCreateDate > createDate ? milestoneCreateDate : createDate,
-          state: 'open'
-        });
-
-        if (item.state === 'closed') {
-          counts[isPr ? 'closedPrs' : 'closedIssues']++;
-          countsHistoryArr.push({
-            date: new Date(item["closed_at"]),
-            state: 'closed'
-          });
-        }
-        else {
-          counts[isPr ? 'openPrs' : 'openIssues']++;
-        }
-      });
-
-      var nextPageUrl = nextPageUrlRegExp.test(response.headers('Link')) &&
-                          nextPageUrlRegExp.exec(response.headers('Link'))[1];
-
-      if (nextPageUrl) {
-        return $http.get(nextPageUrl).then(handleResponse);
-      }
-
-      if (needClosed) {
-        needClosed = false;
-        return $http
-            .get(url + '/issues?state=closed&milestone=' + milestoneNumber, {params: githubAuth})
-            .then(handleResponse, handleError);
-      }
-
-      localStorage[cacheKey] = JSON.stringify(counts);
-      return counts;
-    };
-
-    var handleError = function () {
-      var cacheValue = localStorage[cacheKey];
-      return cacheValue ? JSON.parse(cacheValue) : {
-        closedPrs: '?',
-        openPrs: '?',
-        openIssues: '?',
-        closedIssues: '?',
-        milestone: {
-          number: '?',
-          title: '?'
-        },
-        prHistory: [], issueHistory: []
-      };
-    };
-
-
-    var handleMilestones = function (response) {
-      var milestone = response.data[0];
-      if (!milestone) {
-        return handleError();
-      }
-      milestoneNumber = milestone.number;
-      counts.milestone = milestone;
-
-      return $http
-          .get(url + '/issues?state=open&milestone=' + milestoneNumber, {params: githubAuth})
-          .then(handleResponse, handleError);
-    };
-
-    return $http
-        .get(url + '/milestones?state=open&sort=due_date&direction=desc', {params: githubAuth})
-        .then(handleMilestones, handleError);
-  };
+.factory('github', ['githubAuth', 'requestWithLocalCache', 'config', 'ItemCollection',
+      function Github(githubAuth, requestWithLocalCache, config, ItemCollection) {
 
   function isGhIssueAPr(item) {
     return item.pull_request && item.pull_request.diff_url;
   }
-}
+
+  var url = 'https://api.github.com/repos/angular/' + config.githubProject;
+
+  return {
+
+    /**
+     * Get the tag name for the most recent release on the given branch
+     * @param  { { releaseTag: string } } branch
+     * An object specifying the prefix for this branch's release tags
+     * @return {string=}
+     * The tag of the latest release for the given branch (or null if none)
+     */
+    getLatestRelease: function(branch) {
+
+      function getFirstMatch(data) {
+        for (var i = 0, ii = data.length; i < ii; i++) {
+          var tag = data[i];
+          if (tag.name.indexOf(branch.releaseTag) === 0) {
+            return tag.name;
+          }
+        }
+        return null;
+      }
+
+      return requestWithLocalCache(url + '/tags', 'github:getLatestRelease:'+branch.releaseTag, getFirstMatch);
+    },
+
+
+    /**
+     * Count the number of commits between two tree-ish git references
+     * @param  {string} from The tree-ish (branch, tag or commit) to start from
+     * @param  {string} to   The tree-ish (branch, tag or commit) to end at
+     * @return {number}       The number of commits between the two tree-ish references
+     */
+    countSHAs: function(from, to) {
+
+      function getCount(data) {
+        return data.ahead_by;
+      }
+
+      return requestWithLocalCache(url + '/compare/' + to + '...' + from, 'github:countSHAs:' + from + ':' + to, getCount);
+    },
+
+
+    /**
+     * Get information about the latest milestone for this repository
+     * @return {Object} An object containing the milestone information
+     */
+    getLatestMilestone: function() {
+
+      function getFirst(data) {
+        return data[0];
+      }
+
+      var params = {
+        state: 'open',
+        sort: 'due_date',
+        direction: 'desc'
+      };
+
+      return requestWithLocalCache(url + '/milestones', 'github:getLatestMilestone', getFirst, params);
+    },
+
+
+    /**
+     * Get an object containing count information about issues in the repository
+     * @param  {string=} state
+     * If given filter the issues by state (open/closed)
+     * @param  {Object|null|undefined} milestone
+     * If `null` then get issue with no milestone;
+     * If `undefined` get issues for any milestone;
+     * Othewise get issue with milestone given by `milestone.number`
+     * @return {{ prs: ItemCollection, issues: ItemCollection }
+     * An object containing a collection of count information for the issues
+     * and pull requests
+     */
+    getIssueCounts: function(milestone, state) {
+
+      var milestoneNumber = angular.isObject(milestone) ?
+        milestone.number : milestone;
+
+      function createCountCollection(data) {
+        var prs = new ItemCollection();
+        var issues = new ItemCollection();
+
+        angular.forEach(data, function(item) {
+          if ( isGhIssueAPr(item) ) {
+            prs.addItem(item);
+          } else {
+            issues.addItem(item);
+          }
+        });
+
+        return { prs: prs, issues: issues };
+      }
+
+      var params = {};
+
+      if ( state ) { params.state = state; }
+      if ( milestoneNumber ) { params.milestone = milestoneNumber; }
+
+      return requestWithLocalCache(url + '/issues', 'github:getCountsFor:'+state+':'+milestoneNumber, createCountCollection, params);
+    }
+
+  };
+
+}])
+
+
+.factory('getAllPages', ['$http', function($http) {
+  return function getAllPages(request) {
+
+    return $http(request).then(function(response) {
+      var nextPageUrlRegExp = /<([^>]+)>; rel="next"/;
+      var nextPageUrl = nextPageUrlRegExp.test(response.headers('Link')) &&
+                          nextPageUrlRegExp.exec(response.headers('Link'))[1];
+      if (nextPageUrl) {
+        request = angular.copy(request);
+        request.url = nextPageUrl;
+        return getAllPages(request).then(function(nextPageResponse) {
+          // Add the previous data pages to the current page
+          nextPageResponse.data = response.data.concat(nextPageResponse.data);
+          return nextPageResponse;
+        });
+      } else {
+        return response;
+      }
+    });
+  };
+
+}])
+
+
+.factory('requestWithLocalCache', ['getAllPages', 'githubAuth', function(getAllPages, githubAuth) {
+
+  function parseDateReviver(k,v) {
+    return (k === 'date') ? new Date(v) : v;
+  }
+
+  return function(url, cacheKey, transform, params) {
+
+    params = angular.extend({}, params, githubAuth);
+    transform = transform || angular.identity;
+
+    return getAllPages({ method: 'GET', url: url, params: params })
+      .then(
+        function success(response) {
+          var data = transform(response.data);
+          localStorage[cacheKey] = JSON.stringify(data);
+          return data;
+        },
+        function error() {
+          return JSON.parse(localStorage[cacheKey] || '', parseDateReviver);
+        }
+      );
+  };
+
+}])
+
+
+.factory('ItemCollection', function() {
+  function ItemCollection() {
+    this.openCount = 0;
+    this.closedCount = 0;
+    this.itemHistory = [];
+  }
+
+  ItemCollection.prototype.addItem = function(item) {
+      var milestoneCreateDate = item.milestone ? new Date(item.milestone.created_at) : null;
+      var createDate = new Date(item.created_at);
+
+      // Add when this item was opened
+      this.itemHistory.push({
+        date: milestoneCreateDate > createDate ? milestoneCreateDate : createDate,
+        state: 'open'
+      });
+
+      if ( item.state === 'closed' ) {
+        this.closedCount++;
+        this.itemHistory.push({
+          date: new Date(item.closed_at),
+          state: 'closed'
+        });
+      } else {
+        this.openCount++;
+      }
+  };
+  return ItemCollection;
+});

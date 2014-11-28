@@ -15,7 +15,7 @@ function BranchStatusController(
       updator();
     });
   });
-  
+
   $scope.branches = [];
   angular.forEach(config.branches, function(branchConfig) {
     var buildCard = createBuildCard();
@@ -30,7 +30,7 @@ function BranchStatusController(
         buildCard.update(buildStatus.happy, buildStatus.since, buildStatus.author);
         $scope.$emit('dash:buildUpdate', branchConfig.title, buildStatus);
       });
-      github.getSHAsSince(branchConfig.name, branchConfig.g3Name).then(function(count) {
+      github.countSHAs(branchConfig.name, branchConfig.g3Name).then(function(count) {
         g3Card.update(count);
       });
     });
@@ -38,10 +38,13 @@ function BranchStatusController(
       var releaseCard = createShaCountCard();
       cards.push(releaseCard);
       updators.push(function() {
-        github.getSHAsSinceRelease(
-            branchConfig.name, branchConfig.releaseTag).then(function(count) {
-          releaseCard.update(count);
-        });
+        github.getLatestRelease(branchConfig)
+          .then(function(release) {
+            return github.countSHAs(branchConfig.name, release);
+          })
+          .then(function(count) {
+            releaseCard.update(count);
+          });
       });
     }
     $scope.branches.push({ title: branchConfig.title,

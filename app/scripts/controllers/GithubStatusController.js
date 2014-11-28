@@ -24,27 +24,36 @@ function GithubStatusController($scope, schedule, config, github,
   };
 
   schedule.onceAMinute(function() {
-    github.getUntriagedCounts().then(function(counts) {
-      untriagedPRsCard.update(counts.prs);
-      untriagedIssuesCard.update(counts.issues);
+    github.getIssueCounts('none', 'open').then(function(counts) {
+      untriagedPRsCard.update(counts.prs.openCount);
+      untriagedIssuesCard.update(counts.issues.openCount);
     });
 
-    github.getCountsForLatestMilestone().then(function(stats) {
-      $scope.milestone.title = stats.milestone.title;
-      milestonePRsCard.update(
-        stats.openPrs, (stats.openPrs !== '?') ? stats.openPrs + stats.closedPrs : '?',
-        stats.prHistory
-      );
-      milestoneIssuesCard.update(
-        stats.openIssues, (stats.openIssues !== '?') ? stats.openIssues + stats.closedIssues : '?',
-        stats.issueHistory);
-      $scope.milestone.done = stats.closedPrs + stats.closedIssues;
-      $scope.milestone.total = stats.openPrs + stats.closedPrs + stats.openIssues + stats.closedIssues;
-    });
+    github.getLatestMilestone()
+      .then(function(milestone) {
+        $scope.milestone.title = milestone.title;
+        return github.getIssueCounts(milestone);
+      })
+      .then(function(counts) {
+        milestonePRsCard.update(
+          counts.prs.openCount,
+          counts.prs.openCount + counts.prs.closedCount,
+          counts.prs.itemHistory
+        );
 
-    github.getAllOpenCounts().then(function(counts) {
-      totalPRsCard.update(counts.prs);
-      totalIssuesCard.update(counts.issues);
+        milestoneIssuesCard.update(
+          counts.issues.openCount,
+          counts.issues.openCount + counts.issues.closedCount,
+          counts.issues.itemHistory
+        );
+
+        $scope.milestone.done = counts.prs.closedCount + counts.issues.closedCount;
+        $scope.milestone.total = counts.prs.closedCount + counts.issues.closedCount + counts.prs.openCount + counts.issues.openCount;
+      });
+
+    github.getIssueCounts(undefined, 'open').then(function(counts) {
+      totalPRsCard.update(counts.prs.openCount);
+      totalIssuesCard.update(counts.issues.openCount);
     });
   });
 }

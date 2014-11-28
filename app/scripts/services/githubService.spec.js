@@ -1,5 +1,8 @@
 'use strict';
 
+/* global describe, it, expect, beforeEach, inject, module */
+/* jshint camelcase: false */
+
 describe('Github Service', function () {
   var $httpBackend;
 
@@ -16,156 +19,195 @@ describe('Github Service', function () {
 
   var url = 'https://api.github.com/repos/angular/angular.js';
 
-  describe('Reading', function () {
-    it('should read tags', inject(function (github) {
-      var tags = [ { name: 'abc' }, { name: 'def' } ]
+  describe('getLatestRelease', function () {
+    var tags = [
+      { name: 'v1.2.28' },
+      { name: 'v1.3.3' },
+      { name: 'v1.3.2' },
+      { name: 'v1.2.27' },
+      { name: 'v1.3.1'}
+    ];
 
-      $httpBackend.when('GET', url + '/tags?').respond(tags);
+    it('should make a github request and get the first matching tag from the response', inject(function (github) {
 
-      var receivedTags;
-      github.getTags().then(function(data) { receivedTags = data; });
+      $httpBackend.expect('GET', url + '/tags?').respond(tags);
+
+      var latestRelease;
+      var branch = { releaseTag: 'v1.3' };
+      github.getLatestRelease(branch).then(function(data) { latestRelease = data; });
       $httpBackend.flush();
 
-      expect(receivedTags).toEqual(tags);
+      expect(latestRelease).toEqual('v1.3.3');
     }));
 
+    it('should cache the latest release', inject(function (github) {
+
+      $httpBackend.expect('GET', url + '/tags?').respond(tags);
+
+      var branch = { releaseTag: 'v1.3' };
+      github.getLatestRelease(branch);
+      $httpBackend.flush();
+
+      expect(JSON.parse(localStorage['github:getLatestRelease:v1.3'])).toEqual('v1.3.3');
+    }));
   });
 
-  describe('Caching', function () {
-    it('should cache tags', inject(function (github) {
-      var tags = [ { name: 'abc' }, { name: 'def' } ]
-
-      $httpBackend.when('GET', url + '/tags?').respond(tags);
-
-      github.getTags();
-      $httpBackend.flush();
-
-      expect(JSON.parse(localStorage['github:getTags'])).toEqual(tags);
-    }));
-
-
-    it('should cache SHA counts since a tag', inject(function (github) {
-      var tag = 'x';
-      var branch = 'y';
-
-      $httpBackend.when('GET', url + '/compare/' + tag + '...' + branch + '?')
-        .respond({ ahead_by: 5 });
-
-      github.getSHAsSince(branch, tag);
-      $httpBackend.flush();
-
-      expect(JSON.parse(localStorage['github:getSHAsSince:' + branch + ':' + tag])).toBe(5);
-    }));
-
-
-    it('should cache SHA counts since a release', inject(function (github) {
-      var tag = { name: 'v1.2' };
-      var branch = 'master';
-
-      $httpBackend.when('GET', url + '/tags?').respond([ tag ]);
-      $httpBackend.when('GET', url + '/compare/' + tag.name + '...' + branch + '?')
-        .respond({ ahead_by: 5 });
-
-      github.getSHAsSinceRelease(branch, 'v1.2');
-      $httpBackend.flush();
-
-      expect(JSON.parse(localStorage['github:getSHAsSinceRelease:' + branch])).toBe(5);
-    }));
-
-
-    it('should cache counts of untriaged', inject(function (github) {
-      var issues = [
-        { pull_request: { diff_url: null }},
-        { pull_request: { diff_url: null }},
-        { pull_request: { diff_url: 'http://a' }},
-        { pull_request: { diff_url: 'http://b' }},
-        { pull_request: { diff_url: 'http://c' }}
-      ];
-
-      $httpBackend.when('GET', url + '/issues?state=open&milestone=none&').respond(issues);
-
-      github.getUntriagedCounts();
-      $httpBackend.flush();
-
-      expect(JSON.parse(localStorage['github:getUntriagedCounts'])).toEqual({
-        issues: 2,
-        prs: 3
+  describe('countSHAs', function() {
+    it('should make a github request and get the number of commits between the two treeish references', inject(function(github) {
+      $httpBackend.expect('GET', url + '/compare/v1.3.3...master?').respond({ ahead_by: 45 });
+      var count;
+      github.countSHAs('master', 'v1.3.3').then(function(data) {
+        count = data;
       });
+      $httpBackend.flush();
+      expect(count).toEqual(45);
+    }));
+  });
+
+  describe('getLatestMilestone', function() {
+    var milestones = [
+      { name: 'milestone-1' },
+      { name: 'milestone-2' },
+      { name: 'milestone-3' }
+    ];
+
+    it('should make a github request and get the first milestone', inject(function(github) {
+      $httpBackend.expect('GET', url + '/milestones?direction=desc&sort=due_date&state=open').respond(milestones);
+
+      var latestMilestone;
+      github.getLatestMilestone().then(function(data) { latestMilestone = data; });
+      $httpBackend.flush();
+
+      expect(latestMilestone).toEqual({ name: 'milestone-1' });
+
     }));
 
 
-    it('should cache counts of open', inject(function (github) {
-      var issues = [
-        { pull_request: { diff_url: null }},
-        { pull_request: { diff_url: null }},
-        { pull_request: { diff_url: 'http://a' }},
-        { pull_request: { diff_url: 'http://b' }},
-        { pull_request: { diff_url: 'http://c' }}
-      ];
+    it('should cache the latest milestone', inject(function (github) {
+      $httpBackend.expect('GET', url + '/milestones?direction=desc&sort=due_date&state=open').respond(milestones);
 
-      $httpBackend.when('GET', url + '/issues?state=open&').respond(issues);
-
-      github.getAllOpenCounts();
+      github.getLatestMilestone();
       $httpBackend.flush();
 
-      expect(JSON.parse(localStorage['github:getAllOpenCounts'])).toEqual({
-        issues: 2,
-        prs: 3
+      expect(JSON.parse(localStorage['github:getLatestMilestone'])).toEqual({ name: 'milestone-1' });
+
+    }));
+  });
+
+  describe('getIssueCounts', function() {
+
+    it('should make a request to github with the correct params', inject(function(github) {
+
+      $httpBackend.expect('GET', url + '/issues?milestone=12&state=open').respond([]);
+      github.getIssueCounts({ number: 12 },'open');
+      $httpBackend.flush();
+
+      $httpBackend.expect('GET', url + '/issues?milestone=12').respond([]);
+      github.getIssueCounts({ number: 12 });
+      $httpBackend.flush();
+
+      $httpBackend.expect('GET', url + '/issues?state=open').respond([]);
+      github.getIssueCounts(undefined,'open');
+      $httpBackend.flush();
+
+      $httpBackend.expect('GET', url + '/issues?').respond([]);
+      github.getIssueCounts();
+      $httpBackend.flush();
+
+      $httpBackend.expect('GET', url + '/issues?milestone=none&state=open').respond([]);
+      github.getIssueCounts('none', 'open');
+      $httpBackend.flush();
+
+      $httpBackend.expect('GET', url + '/issues?milestone=none').respond([]);
+      github.getIssueCounts('none');
+      $httpBackend.flush();
+    }));
+
+    var openDate1 = new Date();
+    var openDate2 = new Date(openDate1.getTime()+1000);
+    var openDate3 = new Date(openDate2.getTime()+1000);
+    var closedDate1 = new Date(openDate1.getTime()+500);
+    var closedDate2 = new Date(closedDate1.getTime()+1000);
+    var closedDate3 = new Date(closedDate2.getTime()+1000);
+
+    var issueResponse = [
+      { state: 'open', pull_request: { diff_url: null }, 'created_at': openDate1},
+      { state: 'open', pull_request: { diff_url: null }, 'created_at': openDate2},
+      { state: 'open', pull_request: { diff_url: 'http://a' }, 'created_at': openDate3},
+      { state: 'closed', pull_request: { diff_url: null }, 'closed_at': closedDate1, 'created_at': openDate1},
+      { state: 'closed', pull_request: { diff_url: 'http://d' }, 'closed_at': closedDate2, 'created_at': openDate2},
+      { state: 'open', pull_request: { diff_url: 'http://b' }, 'created_at': openDate1},
+      { state: 'open', pull_request: { diff_url: 'http://c' }, 'created_at': openDate2},
+      { state: 'closed', pull_request: { diff_url: 'http://e' }, 'closed_at': closedDate3, 'created_at': openDate3}
+    ];
+
+    it('should respond with an object containing the count info', inject(function(github) {
+
+      $httpBackend.expect('GET', url + '/issues?').respond(issueResponse);
+      var countInfo;
+      github.getIssueCounts().then(function(data) {
+        countInfo = data;
       });
-    }));
-
-
-    it('should cache milestone counts', inject(function (github) {
-      var milestone = {
-        title: 'v1.2-rc2',
-        number: 2
-      };
-      var openDate = new Date();
-      var open_issues = [
-        { state: 'open', pull_request: { diff_url: null }, 'created_at': openDate},
-        { state: 'open', pull_request: { diff_url: null }, 'created_at': openDate},
-        { state: 'open', pull_request: { diff_url: 'http://a' }, 'created_at': openDate},
-        { state: 'open', pull_request: { diff_url: 'http://b' }, 'created_at': openDate},
-        { state: 'open', pull_request: { diff_url: 'http://c' }, 'created_at': openDate}
-      ];
-      var closedDate = new Date(openDate.getTime()+1000);
-      var closed_issues = [
-        { state: 'closed', pull_request: { diff_url: null }, 'closed_at': closedDate, 'created_at': openDate},
-        { state: 'closed', pull_request: { diff_url: 'http://d' }, 'closed_at': closedDate, 'created_at': openDate},
-        { state: 'closed', pull_request: { diff_url: 'http://e' }, 'closed_at': closedDate, 'created_at': openDate}
-      ];
-
-      $httpBackend.when('GET', url + '/milestones?state=open&sort=due_date&direction=desc&')
-        .respond([ milestone ]);
-      $httpBackend.when('GET', url + '/issues?state=open&milestone=' + milestone.number + '&')
-        .respond(open_issues);
-      $httpBackend.when('GET', url + '/issues?state=closed&milestone=' + milestone.number + '&')
-        .respond(closed_issues);
-
-      github.getCountsForLatestMilestone();
       $httpBackend.flush();
 
-      var openDateStr = openDate.toISOString(),
-        closedDateStr = closedDate.toISOString();
-      expect(JSON.parse(localStorage['github:getCountsForLatestMilestone'])).toEqual(
-        { closedPrs: 2, openPrs: 3, openIssues: 2, closedIssues: 1, prHistory: [
-          { date: openDateStr, state: 'open' },
-          { date: openDateStr, state: 'open' },
-          { date: openDateStr, state: 'open' },
-          { date: openDateStr, state: 'open' },
-          { date: closedDateStr, state: 'closed' },
-          { date: openDateStr, state: 'open' },
-          { date: closedDateStr, state: 'closed' }
-        ], issueHistory: [
-          { date: openDateStr, state: 'open' },
-          { date: openDateStr, state: 'open' },
-          { date: openDateStr, state: 'open' },
-          { date: closedDateStr, state: 'closed' }
-        ], milestone: milestone
+      expect(countInfo.prs.openCount).toEqual(3);
+      expect(countInfo.prs.closedCount).toEqual(2);
 
-        }
+      expect(countInfo.issues.openCount).toEqual(2);
+      expect(countInfo.issues.closedCount).toEqual(1);
 
-      );
+      expect(countInfo.prs.itemHistory).toEqual([
+        { date : openDate3, state : 'open' },
+        { date : openDate2, state : 'open' },
+        { date : closedDate2, state : 'closed' },
+        { date : openDate1, state : 'open' },
+        { date : openDate2, state : 'open' },
+        { date : openDate3, state : 'open' },
+        { date : closedDate3, state : 'closed' }
+      ]);
+      expect(countInfo.issues.itemHistory).toEqual([
+        { date : openDate1, state : 'open' },
+        { date : openDate2, state : 'open' },
+        { date : openDate1, state : 'open' },
+        { date : closedDate1, state : 'closed' }
+      ]);
     }));
+
+
+    it('should cache the count info', inject(function(github) {
+
+      function parseDateReviver(k,v) {
+        return (k === 'date') ? new Date(v) : v;
+      }
+
+      $httpBackend.expect('GET', url + '/issues?milestone=1&state=open').respond(issueResponse);
+      github.getIssueCounts({ number: 1 }, 'open');
+      $httpBackend.flush();
+
+      var countInfo = JSON.parse(localStorage['github:getCountsFor:open:1'], parseDateReviver);
+
+      expect(countInfo.prs.openCount).toEqual(3);
+      expect(countInfo.prs.closedCount).toEqual(2);
+
+      expect(countInfo.issues.openCount).toEqual(2);
+      expect(countInfo.issues.closedCount).toEqual(1);
+
+      expect(countInfo.prs.itemHistory).toEqual([
+        { date : openDate3, state : 'open' },
+        { date : openDate2, state : 'open' },
+        { date : closedDate2, state : 'closed' },
+        { date : openDate1, state : 'open' },
+        { date : openDate2, state : 'open' },
+        { date : openDate3, state : 'open' },
+        { date : closedDate3, state : 'closed' }
+      ]);
+      expect(countInfo.issues.itemHistory).toEqual([
+        { date : openDate1, state : 'open' },
+        { date : openDate2, state : 'open' },
+        { date : openDate1, state : 'open' },
+        { date : closedDate1, state : 'closed' }
+      ]);
+    }));
+
   });
 });
