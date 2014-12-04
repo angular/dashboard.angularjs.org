@@ -102,7 +102,7 @@ describe('Github Service', function () {
       github.getIssueCounts({ number: 12 },'open');
       $httpBackend.flush();
 
-      $httpBackend.expect('GET', url + '/issues?milestone=12').respond([]);
+      $httpBackend.expect('GET', url + '/issues?milestone=12&state=all').respond([]);
       github.getIssueCounts({ number: 12 });
       $httpBackend.flush();
 
@@ -110,7 +110,7 @@ describe('Github Service', function () {
       github.getIssueCounts(undefined,'open');
       $httpBackend.flush();
 
-      $httpBackend.expect('GET', url + '/issues?').respond([]);
+      $httpBackend.expect('GET', url + '/issues?state=all').respond([]);
       github.getIssueCounts();
       $httpBackend.flush();
 
@@ -118,7 +118,7 @@ describe('Github Service', function () {
       github.getIssueCounts('none', 'open');
       $httpBackend.flush();
 
-      $httpBackend.expect('GET', url + '/issues?milestone=none').respond([]);
+      $httpBackend.expect('GET', url + '/issues?milestone=none&state=all').respond([]);
       github.getIssueCounts('none');
       $httpBackend.flush();
     }));
@@ -143,7 +143,7 @@ describe('Github Service', function () {
 
     it('should respond with an object containing the count info', inject(function(github) {
 
-      $httpBackend.expect('GET', url + '/issues?').respond(issueResponse);
+      $httpBackend.expect('GET', url + '/issues?state=all').respond(issueResponse);
       var countInfo;
       github.getIssueCounts().then(function(data) {
         countInfo = data;

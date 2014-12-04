@@ -114,7 +114,7 @@ angular.module('github', ['config'])
 
       var params = {};
 
-      if ( state ) { params.state = state; }
+      params.state = state || 'all';
       if ( milestoneNumber ) { params.milestone = milestoneNumber; }
 
       return requestWithLocalCache(url + '/issues', 'github:getCountsFor:'+state+':'+milestoneNumber, createCountCollection, params);
