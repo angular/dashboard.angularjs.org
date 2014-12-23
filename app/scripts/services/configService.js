@@ -4,14 +4,21 @@ var angularJsConfig = {
   githubProject: 'angular.js',
   branches: {
     master: {
-      title: 'master',
+      title: 'master/1.4',
       name: 'master',
-      g3Name: 'g3_v1_3',
-      releaseTag: 'v1.3',
+      g3Name: 'g3_v1_4',
+      releaseTag: 'v1.4',
       jenkinsProjectId: 'angular.js-angular-master'
     },
     stable: {
-      title: 'stable/1.2',
+      title: 'stable/1.3',
+      name: 'v1.3.x',
+      g3Name: 'g3_v1_3',
+      releaseTag: 'v1.3',
+      jenkinsProjectId: 'angular.js-angular-v1.3.x'
+    },
+    legacy: {
+      title: 'legacy/1.2',
       name: 'v1.2.x',
       g3Name: 'g3_v1_2',
       releaseTag: 'v1.2',

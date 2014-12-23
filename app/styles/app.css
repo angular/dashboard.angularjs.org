@@ -20,7 +20,7 @@ body {
 .branch {
   float: left;
   position: relative;
-  width: 50%;
+  width: 33%;
 }
 
 .branch:first-child::after {
@@ -53,7 +53,7 @@ body {
 .card {
   float: left;
   position: relative;
-  width: 510px;
+  width: 336px;
   height: 280px;
   margin: 0 0 30px 40px;
   border-radius: 5px;
@@ -140,6 +140,10 @@ body {
 .build-card-broken .card-value,
 .build-card-broken .card-note strong {
   color: #d70028;
+}
+
+.build-card-broken .card-value {
+  font-size: 60px;
 }
 
 
@@ -466,7 +470,7 @@ body {
 .google3-card .card-graph svg .graph-sparkline {
   fill: #d6ff99;
 }
-  
+
 .google3-card-far-behind .card-graph svg .graph-sparkline {
   fill: #ffcdba;
 }
