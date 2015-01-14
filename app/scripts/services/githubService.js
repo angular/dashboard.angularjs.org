@@ -157,7 +157,7 @@ angular.module('github', ['config'])
 
   return function(url, cacheKey, transform, params) {
 
-    params = angular.extend({}, params, githubAuth);
+    params = angular.extend({per_page:100}, params, githubAuth);
     transform = transform || angular.identity;
 
     return getAllPages({ method: 'GET', url: url, params: params })
