@@ -18,11 +18,11 @@ var angularJsConfig = {
       jenkinsProjectId: 'angular.js-angular-v1.4.x'
     },
     legacy: {
-      title: 'legacy/1.2',
-      name: 'v1.2.x',
-      g3Name: 'g3_v1_2',
-      releaseTag: 'v1.2',
-      jenkinsProjectId: 'angular.js-angular-v1.2.x'
+      title: 'legacy/1.3',
+      name: 'v1.3.x',
+      g3Name: 'g3_v1_3',
+      releaseTag: 'v1.3',
+      jenkinsProjectId: 'angular.js-angular-v1.3.x'
     }
   }
 };
