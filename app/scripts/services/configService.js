@@ -20,7 +20,7 @@ var angularJsConfig = {
     legacy: {
       title: 'legacy/1.4',
       name: 'v1.4.x',
-      g3Name: 'g4_v1_4',
+      g3Name: 'g3_v1_4',
       releaseTag: 'v1.4',
       jenkinsProjectId: 'angular.js-angular-v1.4.x'
     }
