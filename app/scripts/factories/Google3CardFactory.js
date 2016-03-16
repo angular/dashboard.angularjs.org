@@ -15,6 +15,7 @@ app.factory('createGoogle3Card', [
   app.inherits(Google3CardViewModel, createCard);
 
   Google3CardViewModel.prototype.update = function(count) {
+    console.log(count);
     this.content = count;
 
     if (count > 50) {

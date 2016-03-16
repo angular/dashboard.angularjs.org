@@ -168,7 +168,7 @@ angular.module('github', ['config'])
           return data;
         },
         function error() {
-          return JSON.parse(localStorage[cacheKey] || '', parseDateReviver);
+          return JSON.parse(localStorage[cacheKey] || '"-"', parseDateReviver);
         }
       );
   };
