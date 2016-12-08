@@ -30,7 +30,7 @@ describe('Github Service', function () {
 
     it('should make a github request and get the first matching tag from the response', inject(function (github) {
 
-      $httpBackend.expect('GET', url + '/tags?').respond(tags);
+      $httpBackend.expect('GET', url + '/tags?per_page=100').respond(tags);
 
       var latestRelease;
       var branch = { releaseTag: 'v1.3' };
@@ -42,7 +42,7 @@ describe('Github Service', function () {
 
     it('should cache the latest release', inject(function (github) {
 
-      $httpBackend.expect('GET', url + '/tags?').respond(tags);
+      $httpBackend.expect('GET', url + '/tags?per_page=100').respond(tags);
 
       var branch = { releaseTag: 'v1.3' };
       github.getLatestRelease(branch);
@@ -54,7 +54,7 @@ describe('Github Service', function () {
 
   describe('countSHAs', function() {
     it('should make a github request and get the number of commits between the two treeish references', inject(function(github) {
-      $httpBackend.expect('GET', url + '/compare/v1.3.3...master?').respond({ ahead_by: 45 });
+      $httpBackend.expect('GET', url + '/compare/v1.3.3...master?per_page=100').respond({ ahead_by: 45 });
       var count;
       github.countSHAs('master', 'v1.3.3').then(function(data) {
         count = data;
@@ -72,7 +72,7 @@ describe('Github Service', function () {
     ];
 
     it('should make a github request and get the first milestone', inject(function(github) {
-      $httpBackend.expect('GET', url + '/milestones?direction=desc&sort=due_date&state=open').respond(milestones);
+      $httpBackend.expect('GET', url + '/milestones?direction=desc&per_page=100&sort=due_date&state=open').respond(milestones);
 
       var latestMilestone;
       github.getLatestMilestone().then(function(data) { latestMilestone = data; });
@@ -84,7 +84,7 @@ describe('Github Service', function () {
 
 
     it('should cache the latest milestone', inject(function (github) {
-      $httpBackend.expect('GET', url + '/milestones?direction=desc&sort=due_date&state=open').respond(milestones);
+      $httpBackend.expect('GET', url + '/milestones?direction=desc&per_page=100&sort=due_date&state=open').respond(milestones);
 
       github.getLatestMilestone();
       $httpBackend.flush();
@@ -98,27 +98,27 @@ describe('Github Service', function () {
 
     it('should make a request to github with the correct params', inject(function(github) {
 
-      $httpBackend.expect('GET', url + '/issues?milestone=12&state=open').respond([]);
+      $httpBackend.expect('GET', url + '/issues?milestone=12&per_page=100&state=open').respond([]);
       github.getIssueCounts({ number: 12 },'open');
       $httpBackend.flush();
 
-      $httpBackend.expect('GET', url + '/issues?milestone=12&state=all').respond([]);
+      $httpBackend.expect('GET', url + '/issues?milestone=12&per_page=100&state=all').respond([]);
       github.getIssueCounts({ number: 12 });
       $httpBackend.flush();
 
-      $httpBackend.expect('GET', url + '/issues?state=open').respond([]);
+      $httpBackend.expect('GET', url + '/issues?per_page=100&state=open').respond([]);
       github.getIssueCounts(undefined,'open');
       $httpBackend.flush();
 
-      $httpBackend.expect('GET', url + '/issues?state=all').respond([]);
+      $httpBackend.expect('GET', url + '/issues?per_page=100&state=all').respond([]);
       github.getIssueCounts();
       $httpBackend.flush();
 
-      $httpBackend.expect('GET', url + '/issues?milestone=none&state=open').respond([]);
+      $httpBackend.expect('GET', url + '/issues?milestone=none&per_page=100&state=open').respond([]);
       github.getIssueCounts('none', 'open');
       $httpBackend.flush();
 
-      $httpBackend.expect('GET', url + '/issues?milestone=none&state=all').respond([]);
+      $httpBackend.expect('GET', url + '/issues?milestone=none&per_page=100&state=all').respond([]);
       github.getIssueCounts('none');
       $httpBackend.flush();
     }));
@@ -143,7 +143,7 @@ describe('Github Service', function () {
 
     it('should respond with an object containing the count info', inject(function(github) {
 
-      $httpBackend.expect('GET', url + '/issues?state=all').respond(issueResponse);
+      $httpBackend.expect('GET', url + '/issues?per_page=100&state=all').respond(issueResponse);
       var countInfo;
       github.getIssueCounts().then(function(data) {
         countInfo = data;
@@ -180,7 +180,7 @@ describe('Github Service', function () {
         return (k === 'date') ? new Date(v) : v;
       }
 
-      $httpBackend.expect('GET', url + '/issues?milestone=1&state=open').respond(issueResponse);
+      $httpBackend.expect('GET', url + '/issues?milestone=1&per_page=100&state=open').respond(issueResponse);
       github.getIssueCounts({ number: 1 }, 'open');
       $httpBackend.flush();
 
